@@ -16,12 +16,19 @@
 ### 已完成模块
 - 用户角色权限管理（RBAC）
 - 工作台（Dashboard）
-- 客户管理
-- 合同管理
+- 客户管理（支持杭州市区县镇街级联选择）
+- 合同管理（区块化表单设计）
 - 开票管理
+- 收款管理
+- 服务管理（区块化表单设计）
+- 操作日志（中文模块名和描述）
+- 附件管理
 
 ### 待开发模块
-- 服务管理、收款管理、文档管理、通知公告、统计分析、系统日志
+- 文档管理
+- 通知公告
+- 统计分析
+- 登录日志
 
 ---
 
@@ -85,7 +92,8 @@ safety-service-system/
 │   │   │       ├── invoices.py
 │   │   │       ├── finance.py
 │   │   │       ├── dashboard.py
-│   │   │       └── attachments.py
+│   │   │       ├── attachments.py
+│   │   │       └── logs.py      # 日志管理
 │   │   ├── core/                # 核心功能
 │   │   │   ├── security.py      # JWT、密码哈希
 │   │   │   ├── permissions.py   # PermissionCode 枚举、PermissionChecker
@@ -130,6 +138,11 @@ safety-service-system/
 │   │   │   ├── api.ts           # axios 实例、拦截器（含 token 刷新队列）
 │   │   │   ├── auth.ts
 │   │   │   ├── users.ts
+│   │   │   ├── companies.ts
+│   │   │   ├── contracts.ts
+│   │   │   ├── invoices.ts
+│   │   │   ├── finance.ts
+│   │   │   ├── logs.ts          # 日志 API
 │   │   │   └── ...
 │   │   ├── components/          # 公共组件
 │   │   │   ├── Layout/
@@ -145,6 +158,7 @@ safety-service-system/
 │   │   │   ├── ServiceManagement/
 │   │   │   ├── FinanceManagement/
 │   │   │   ├── DocumentManagement/
+│   │   │   ├── SystemSettings/      # 系统设置（日志管理等）
 │   │   │   └── Profile/
 │   │   ├── stores/              # Zustand 状态管理
 │   │   │   ├── authStore.ts     # 认证状态（含 persist + hydration 处理）
@@ -232,6 +246,9 @@ cd frontend && npm run format
 
 # 进入 Redis
 ./manage-infra.sh redis-cli
+
+# 类型检查
+cd frontend && npx tsc --noEmit
 ```
 
 ---
@@ -277,11 +294,22 @@ cd frontend && npm run format
 3. API 调用通过 `frontend/src/api/` 下的模块进行
 4. 认证状态使用 `authStore`（Zustand + persist），token 刷新逻辑在 `api.ts` 拦截器中实现
 5. 路由守卫在 `App.tsx` 中实现，`MainLayout.tsx` 负责侧边栏菜单和面包屑
+6. **表单设计规范**: 采用区块化设计，不同区块使用不同颜色背景：
+   - 绿色 (#f6ffed): 基本信息
+   - 蓝色 (#e6f7ff): 业务信息
+   - 橙色 (#fff7e6): 属地/服务信息
+   - 紫色 (#f9f0ff): 其他信息
 
 ### 权限系统
 - 权限码定义在 `backend/app/core/permissions.py` 的 `PermissionCode` 枚举
 - 前端菜单项也绑定 `permission` 字段用于控制显示
 - 超级管理员（`is_superuser = true`）绕过所有权限检查
+
+### 操作日志系统
+- 自动记录所有业务操作，通过 `OperationLogMiddleware`
+- 模块名称映射在 `MODULE_NAME_MAP` 中定义中文名
+- 操作描述根据 HTTP 方法和动作自动生成中文描述
+- 支持所有业务模块的监控
 
 ---
 
@@ -351,6 +379,8 @@ cd frontend && npm run format
 3. **前端页面结构**: 每个新页面建议放在 `frontend/src/pages/{ModuleName}/{PageName}/`，包含 `index.tsx` + `style.css`。
 4. **权限码一致性**: 新增后端权限时，同步更新 `PermissionCode` 枚举、前端菜单配置以及路由/按钮的权限控制。
 5. **保持中文注释风格**: 新增代码的注释和文档建议继续使用中文，与现有代码保持一致。
+6. **表单设计规范**: 新增表单时采用区块化设计，参考客户表单、合同表单、服务表单的实现方式。
+7. **操作日志**: 新增业务模块时，在 `MODULE_NAME_MAP` 中添加中文模块名映射。
 
 ---
 
