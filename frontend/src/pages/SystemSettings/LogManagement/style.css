@@ -1,0 +1,19 @@
+.log-management-page {
+  min-height: 100%;
+}
+
+.log-management-page .search-bar {
+  margin-bottom: 16px;
+  padding: 16px;
+  background: #fafafa;
+  border-radius: 4px;
+}
+
+.log-management-page .pre-wrap {
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.log-management-page .error-text {
+  color: #ff4d4f;
+}

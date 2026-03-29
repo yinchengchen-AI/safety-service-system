@@ -1,0 +1,334 @@
+/* 安全生产主题登录页面 */
+
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #0d1b2a 0%, #1b263b 50%, #415a77 100%);
+  position: relative;
+  overflow: hidden;
+  padding: 20px;
+}
+
+/* 背景装饰 - 工业网格 */
+.login-page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    linear-gradient(rgba(255, 77, 79, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 77, 79, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none;
+}
+
+/* 背景装饰 - 几何图形 */
+.login-page::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle, rgba(255, 77, 79, 0.08) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* 左侧装饰区域 */
+.login-decoration {
+  position: absolute;
+  left: 5%;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.9);
+  max-width: 400px;
+  display: none;
+}
+
+@media (min-width: 1200px) {
+  .login-decoration {
+    display: block;
+  }
+}
+
+.login-decoration h2 {
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.login-decoration p {
+  font-size: 16px;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 32px;
+}
+
+/* 安全标语 */
+.safety-slogan {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.safety-slogan span {
+  background: rgba(255, 77, 79, 0.15);
+  border: 1px solid rgba(255, 77, 79, 0.3);
+  color: #ffccc7;
+  padding: 6px 16px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* 登录卡片 */
+.login-card {
+  width: 100%;
+  max-width: 440px;
+  border-radius: 16px;
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(10px);
+  position: relative;
+  z-index: 10;
+  overflow: hidden;
+}
+
+/* 卡片顶部装饰条 */
+.login-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #ff4d4f 0%, #ff7875 50%, #ffa39e 100%);
+}
+
+/* 登录头部 */
+.login-header {
+  text-align: center;
+  margin-bottom: 32px;
+  padding-top: 8px;
+}
+
+/* Logo 区域 */
+.login-logo-wrapper {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 20px;
+}
+
+.login-logo {
+  width: 88px;
+  height: 88px;
+  background: linear-gradient(135deg, #ff4d4f 0%, #ff7875 100%);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 44px;
+  color: #fff;
+  box-shadow: 
+    0 8px 24px rgba(255, 77, 79, 0.35),
+    0 2px 4px rgba(255, 77, 79, 0.2);
+  position: relative;
+  z-index: 2;
+}
+
+/* Logo 装饰光环 */
+.login-logo-wrapper::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  right: -8px;
+  bottom: -8px;
+  background: linear-gradient(135deg, rgba(255, 77, 79, 0.2) 0%, transparent 60%);
+  border-radius: 28px;
+  z-index: 1;
+}
+
+/* 安全徽章 */
+.safety-badge {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  width: 28px;
+  height: 28px;
+  background: #52c41a;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #fff;
+  border: 3px solid #fff;
+  box-shadow: 0 2px 8px rgba(82, 196, 26, 0.4);
+  z-index: 3;
+}
+
+.login-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #1f1f1f;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+
+.login-subtitle {
+  font-size: 13px;
+  color: #8c8c8c;
+  font-weight: 400;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* 表单样式 */
+.login-form {
+  margin-top: 8px;
+}
+
+.login-form .ant-input-affix-wrapper {
+  border-radius: 10px;
+  border-color: #d9d9d9;
+  padding: 12px 16px;
+  transition: all 0.3s ease;
+}
+
+.login-form .ant-input-affix-wrapper:hover,
+.login-form .ant-input-affix-wrapper:focus {
+  border-color: #ff4d4f;
+  box-shadow: 0 0 0 3px rgba(255, 77, 79, 0.1);
+}
+
+.login-form .ant-input-prefix {
+  color: #ff4d4f;
+  font-size: 18px;
+  margin-right: 12px;
+}
+
+/* 登录按钮 */
+.login-button {
+  height: 48px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #ff4d4f 0%, #ff7875 100%);
+  border: none;
+  box-shadow: 0 4px 16px rgba(255, 77, 79, 0.35);
+  transition: all 0.3s ease;
+}
+
+.login-button:hover {
+  background: linear-gradient(135deg, #ff7875 0%, #ff4d4f 100%);
+  box-shadow: 0 6px 20px rgba(255, 77, 79, 0.45);
+  transform: translateY(-1px);
+}
+
+.login-button:active {
+  transform: translateY(0);
+}
+
+/* 底部信息 */
+.login-footer {
+  text-align: center;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.login-footer p {
+  color: #bfbfbf;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.safety-tips {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: #ff4d4f;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.safety-tips .anticon {
+  font-size: 14px;
+}
+
+/* 装饰性元素 */
+.decoration-shapes {
+  position: absolute;
+  bottom: 10%;
+  left: 5%;
+  display: flex;
+  gap: 20px;
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+.shape {
+  width: 60px;
+  height: 60px;
+  border: 2px solid #fff;
+  border-radius: 8px;
+  transform: rotate(45deg);
+}
+
+.shape:nth-child(2) {
+  width: 40px;
+  height: 40px;
+  margin-top: 30px;
+}
+
+/* 响应式优化 */
+@media (max-width: 576px) {
+  .login-page {
+    padding: 16px;
+    background: linear-gradient(180deg, #1b263b 0%, #415a77 100%);
+  }
+  
+  .login-card {
+    border-radius: 12px;
+  }
+  
+  .login-logo {
+    width: 72px;
+    height: 72px;
+    font-size: 36px;
+  }
+  
+  .login-title {
+    font-size: 22px;
+  }
+  
+  .shape {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* 加载动画 */
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(255, 77, 79, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(255, 77, 79, 0);
+  }
+}
+
+.login-button.ant-btn-loading {
+  animation: pulse 1.5s infinite;
+}

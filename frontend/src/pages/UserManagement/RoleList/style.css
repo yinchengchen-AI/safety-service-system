@@ -1,0 +1,13 @@
+.role-list-page {
+  padding: 0;
+}
+
+.role-name {
+  font-weight: 500;
+  color: #262626;
+}
+
+.role-code {
+  font-size: 12px;
+  color: #8c8c8c;
+}

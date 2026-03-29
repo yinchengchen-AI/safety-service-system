@@ -1,0 +1,27 @@
+.department-list-page {
+  padding: 24px;
+}
+
+.department-list-page .ant-card {
+  border-radius: 8px;
+}
+
+.department-list-page .ant-card-head {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.department-list-page .ant-table {
+  margin-top: 16px;
+}
+
+.department-list-page .ant-table-row-level-0 {
+  font-weight: 500;
+}
+
+.department-list-page .ant-table-row-level-1 {
+  background-color: #fafafa;
+}
+
+.department-list-page .ant-table-row-level-2 {
+  background-color: #f5f5f5;
+}

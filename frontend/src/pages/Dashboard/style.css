@@ -1,0 +1,137 @@
+.dashboard {
+  padding: 0;
+}
+
+.stat-row {
+  margin-bottom: 16px;
+}
+
+.stat-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-icon {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.stat-change {
+  margin-top: 8px;
+  font-size: 14px;
+}
+
+.change-up {
+  color: #52c41a;
+  margin-right: 8px;
+}
+
+.change-down {
+  color: #ff4d4f;
+  margin-right: 8px;
+}
+
+.change-text {
+  color: #8c8c8c;
+}
+
+.quick-card .ant-card-body {
+  padding: 24px;
+}
+
+.quick-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  background: #fafafa;
+}
+
+.quick-item:hover {
+  background: #f0f0f0;
+  transform: translateY(-2px);
+}
+
+.quick-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-bottom: 12px;
+  background: var(--item-color);
+  color: white;
+}
+
+.quick-title {
+  font-size: 14px;
+  color: #262626;
+}
+
+.todo-card .ant-list-item {
+  padding: 12px 0;
+}
+
+.todo-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+}
+
+.todo-desc {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.activity-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #1890ff;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.activity-action {
+  color: #8c8c8c;
+}
+
+.activity-time {
+  color: #bfbfbf;
+  font-size: 12px;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .stat-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+  
+  .quick-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+}

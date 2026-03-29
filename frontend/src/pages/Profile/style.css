@@ -1,0 +1,160 @@
+.profile-page {
+  padding: 24px;
+}
+
+.profile-card {
+  border-radius: 8px;
+}
+
+.profile-header {
+  text-align: center;
+  padding: 16px 0;
+}
+
+.profile-avatar-wrapper {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 16px;
+}
+
+.profile-avatar {
+  background: linear-gradient(135deg, #1890ff 0%, #36cfc9 100%);
+  transition: all 0.3s ease;
+}
+
+.profile-avatar:hover {
+  opacity: 0.8;
+}
+
+.avatar-upload {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 40px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.profile-avatar-wrapper:hover .avatar-upload {
+  opacity: 1;
+}
+
+.profile-avatar-wrapper:hover .avatar-upload-overlay {
+  opacity: 1;
+}
+
+.avatar-upload-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background: rgba(0, 0, 0, 0.5);
+  border-bottom-left-radius: 50px;
+  border-bottom-right-radius: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 12px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  cursor: pointer;
+}
+
+.avatar-upload-overlay span {
+  font-size: 10px;
+  margin-top: 2px;
+}
+
+.profile-name {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #262626;
+}
+
+.profile-role {
+  margin-bottom: 0;
+}
+
+.profile-info {
+  margin-top: 16px;
+}
+
+.profile-info .ant-descriptions-item-label {
+  color: #8c8c8c;
+  width: 80px;
+}
+
+.profile-info .ant-descriptions-item-content {
+  color: #262626;
+}
+
+.profile-stats {
+  padding: 8px 0;
+}
+
+.profile-stats .ant-statistic-title {
+  color: #8c8c8c;
+  font-size: 13px;
+}
+
+.profile-stats .ant-statistic-content {
+  color: #1890ff;
+  font-size: 24px;
+}
+
+.profile-tabs-card {
+  border-radius: 8px;
+  min-height: 500px;
+}
+
+.profile-tabs-card .ant-tabs-nav {
+  margin-bottom: 24px;
+  padding: 0 8px;
+}
+
+.profile-form {
+  max-width: 600px;
+  padding: 8px 16px;
+}
+
+.profile-form .ant-form-item {
+  margin-bottom: 20px;
+}
+
+.form-actions {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #f0f0f0;
+}
+
+/* 头像上传相关样式 */
+.avatar-uploader .ant-upload {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: #f5f5f5;
+  border: 2px dashed #d9d9d9;
+  transition: all 0.3s ease;
+}
+
+.avatar-uploader .ant-upload:hover {
+  border-color: #1890ff;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .profile-page {
+    padding: 12px;
+  }
+  
+  .profile-form {
+    padding: 8px;
+  }
+}

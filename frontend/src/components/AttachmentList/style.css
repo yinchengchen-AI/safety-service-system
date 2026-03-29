@@ -1,0 +1,45 @@
+.attachment-list {
+  padding: 16px 0;
+}
+
+.attachment-upload {
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.attachment-items {
+  border: 1px solid #f0f0f0;
+  border-radius: 4px;
+}
+
+.attachment-item {
+  padding: 12px 16px;
+  transition: background-color 0.3s;
+}
+
+.attachment-item:hover {
+  background-color: #fafafa;
+}
+
+.attachment-item .ant-list-item-meta {
+  align-items: center;
+}
+
+.attachment-item .ant-list-item-meta-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: #f5f5f5;
+  border-radius: 4px;
+}
+
+.attachment-item .ant-list-item-action {
+  margin-left: 16px;
+}
+
+.attachment-item .ant-list-item-action > li {
+  padding: 0 4px;
+}

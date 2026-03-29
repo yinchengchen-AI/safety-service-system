@@ -1,0 +1,124 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* 登录页背景 */
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.login-box {
+  width: 400px;
+  padding: 40px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.login-title {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.login-title h1 {
+  font-size: 24px;
+  color: #1890ff;
+  margin-bottom: 8px;
+}
+
+.login-title p {
+  color: #999;
+  font-size: 14px;
+}
+
+/* 布局样式 */
+.layout-container {
+  min-height: 100vh;
+}
+
+.layout-sider {
+  background: #fff;
+}
+
+.layout-header {
+  background: #fff;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+}
+
+.layout-content {
+  margin: 24px;
+  padding: 24px;
+  background: #fff;
+  border-radius: 4px;
+  min-height: 280px;
+}
+
+/* 表格操作栏 */
+.table-toolbar {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+/* 搜索表单 */
+.search-form {
+  margin-bottom: 24px;
+  padding: 24px;
+  background: #fafafa;
+  border-radius: 4px;
+}
+
+/* 详情页 */
+.detail-card {
+  margin-bottom: 24px;
+}
+
+/* 统计卡片 */
+.stat-card {
+  text-align: center;
+}
+
+.stat-card .ant-statistic-title {
+  color: #666;
+  font-size: 14px;
+}
+
+.stat-card .ant-statistic-content {
+  color: #333;
+  font-size: 32px;
+  font-weight: 600;
+}
