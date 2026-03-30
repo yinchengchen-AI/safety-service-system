@@ -23,6 +23,8 @@ import {
   LogoutOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
+  BarChartOutlined,
+  LoginOutlined,
 } from '@ant-design/icons'
 import { useAuthStore } from '@/stores'
 import { authApi } from '@/api/auth'
@@ -89,13 +91,21 @@ const menuItems = [
     ],
   },
   {
+    key: 'statistics-analysis',
+    icon: <BarChartOutlined />,
+    label: '统计分析',
+    children: [
+      { key: '/statistics', label: '统计概览', permission: 'statistics:view' },
+      { key: '/login-logs', label: '登录日志', permission: 'log:view' },
+    ],
+  },
+  {
     key: 'system-settings',
     icon: <SettingOutlined />,
     label: '系统设置',
     children: [
       { key: '/notices', label: '通知公告', permission: 'notice:view' },
       { key: '/logs', label: '操作日志', permission: 'log:view' },
-      { key: '/statistics', label: '统计分析', permission: 'statistics:view' },
     ],
   },
 ]

@@ -1,0 +1,25 @@
+.notice-stats-page {
+  padding: 24px;
+}
+
+.notice-stats-page .ant-card {
+  border-radius: 8px;
+}
+
+.stats-cards .ant-card {
+  text-align: center;
+}
+
+.stats-cards .ant-statistic-title {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.stats-cards .ant-statistic-content {
+  font-size: 32px;
+  font-weight: 600;
+}
+
+.stats-cards .ant-progress {
+  margin-top: 8px;
+}

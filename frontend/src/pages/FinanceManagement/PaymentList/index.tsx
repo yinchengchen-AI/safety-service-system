@@ -287,91 +287,101 @@ const PaymentList = () => {
           form={form}
           layout="vertical"
           onFinish={handleSubmit}
+          style={{ marginTop: -8 }}
         >
-          <Form.Item
-            name="contract_id"
-            label="合同"
-            rules={[{ required: true, message: '请选择合同' }]}
-          >
-            <Select
-              placeholder="请选择合同"
-              showSearch
-              optionFilterProp="children"
+          <div className="form-section">
+            <div className="form-section-title basic">关联信息</div>
+            <Form.Item
+              name="contract_id"
+              label="合同"
+              rules={[{ required: true, message: '请选择合同' }]}
             >
-              {/* 这里应该从后端获取合同列表 */}
-              <Option value={1}>合同示例 1</Option>
-              <Option value={2}>合同示例 2</Option>
-            </Select>
-          </Form.Item>
+              <Select
+                placeholder="请选择合同"
+                showSearch
+                optionFilterProp="children"
+              >
+                {/* 这里应该从后端获取合同列表 */}
+                <Option value={1}>合同示例 1</Option>
+                <Option value={2}>合同示例 2</Option>
+              </Select>
+            </Form.Item>
 
-          <Form.Item
-            name="invoice_id"
-            label="关联发票（可选）"
-          >
-            <Select
-              allowClear
-              placeholder="不选则为预收款"
+            <Form.Item
+              name="invoice_id"
+              label="关联发票（可选）"
             >
-              <Option value={1}>发票 001（未收：¥10,000）</Option>
-              <Option value={2}>发票 002（未收：¥20,000）</Option>
-            </Select>
-          </Form.Item>
+              <Select
+                allowClear
+                placeholder="不选则为预收款"
+              >
+                <Option value={1}>发票 001（未收：¥10,000）</Option>
+                <Option value={2}>发票 002（未收：¥20,000）</Option>
+              </Select>
+            </Form.Item>
+          </div>
 
-          <Form.Item
-            name="amount"
-            label="收款金额"
-            rules={[{ required: true, message: '请输入收款金额' }]}
-          >
-            <InputNumber
-              style={{ width: '100%' }}
-              prefix="¥"
-              precision={2}
-              min={0.01}
-              placeholder="请输入收款金额"
-            />
-          </Form.Item>
+          <div className="form-section">
+            <div className="form-section-title business">收款信息</div>
+            <Form.Item
+              name="amount"
+              label="收款金额"
+              rules={[{ required: true, message: '请输入收款金额' }]}
+            >
+              <InputNumber
+                style={{ width: '100%' }}
+                prefix="¥"
+                precision={2}
+                min={0.01}
+                placeholder="请输入收款金额"
+              />
+            </Form.Item>
 
-          <Form.Item
-            name="payment_date"
-            label="收款日期"
-            rules={[{ required: true }]}
-          >
-            <DatePicker style={{ width: '100%' }} />
-          </Form.Item>
+            <Form.Item
+              name="payment_date"
+              label="收款日期"
+              rules={[{ required: true }]}
+            >
+              <DatePicker style={{ width: '100%' }} />
+            </Form.Item>
 
-          <Form.Item
-            name="method"
-            label="收款方式"
-            rules={[{ required: true }]}
-          >
-            <Select>
-              <Option value="bank_transfer">银行转账</Option>
-              <Option value="cash">现金</Option>
-              <Option value="cheque">支票</Option>
-              <Option value="other">其他</Option>
-            </Select>
-          </Form.Item>
+            <Form.Item
+              name="method"
+              label="收款方式"
+              rules={[{ required: true }]}
+            >
+              <Select>
+                <Option value="bank_transfer">银行转账</Option>
+                <Option value="cash">现金</Option>
+                <Option value="cheque">支票</Option>
+                <Option value="other">其他</Option>
+              </Select>
+            </Form.Item>
+          </div>
 
-          <Form.Item
-            name="payer_name"
-            label="付款方"
-          >
-            <Input placeholder="请输入付款方名称" />
-          </Form.Item>
+          <div className="form-section">
+            <div className="form-section-title other">其他信息</div>
+            <Form.Item
+              name="payer_name"
+              label="付款方"
+            >
+              <Input placeholder="请输入付款方名称" />
+            </Form.Item>
 
-          <Form.Item
-            name="voucher_no"
-            label="凭证号"
-          >
-            <Input placeholder="请输入凭证号" />
-          </Form.Item>
+            <Form.Item
+              name="voucher_no"
+              label="凭证号"
+            >
+              <Input placeholder="请输入凭证号" />
+            </Form.Item>
 
-          <Form.Item
-            name="remark"
-            label="备注"
-          >
-            <Input.TextArea rows={3} placeholder="请输入备注" />
-          </Form.Item>
+            <Form.Item
+              name="remark"
+              label="备注"
+            >
+              <Input.TextArea rows={3} placeholder="请输入备注" />
+            </Form.Item>
+          </div>
         </Form>
       </Modal>
     </div>

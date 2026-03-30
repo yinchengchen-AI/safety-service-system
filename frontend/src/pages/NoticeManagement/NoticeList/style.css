@@ -1,0 +1,16 @@
+.notice-list-page {
+  padding: 24px;
+}
+
+.notice-list-page .ant-card {
+  border-radius: 8px;
+}
+
+.notice-list-page .ant-table-row:hover {
+  cursor: pointer;
+}
+
+.notice-list-page .ant-tag {
+  font-size: 13px;
+  padding: 2px 8px;
+}

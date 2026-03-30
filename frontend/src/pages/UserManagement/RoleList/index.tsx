@@ -320,39 +320,45 @@ const RoleList = () => {
         width={700}
         confirmLoading={createMutation.isPending || updateMutation.isPending}
       >
-        <Form form={form} layout="vertical" onFinish={handleSubmit}>
-          <Form.Item
-            name="name"
-            label="角色名称"
-            rules={[{ required: true, message: '请输入角色名称' }]}
-          >
-            <Input placeholder="请输入角色名称" />
-          </Form.Item>
+        <Form form={form} layout="vertical" onFinish={handleSubmit} style={{ marginTop: -8 }}>
+          <div className="form-section">
+            <div className="form-section-title basic">基本信息</div>
+            <Form.Item
+              name="name"
+              label="角色名称"
+              rules={[{ required: true, message: '请输入角色名称' }]}
+            >
+              <Input placeholder="请输入角色名称" />
+            </Form.Item>
 
-          <Form.Item
-            name="code"
-            label="角色编码"
-            rules={[{ required: true, message: '请输入角色编码' }]}
-          >
-            <Input
-              readOnly
-              placeholder="系统自动生成"
-              style={{ backgroundColor: '#f5f5f5', color: '#666' }}
-            />
-          </Form.Item>
+            <Form.Item
+              name="code"
+              label="角色编码"
+              rules={[{ required: true, message: '请输入角色编码' }]}
+            >
+              <Input
+                readOnly
+                placeholder="系统自动生成"
+                style={{ backgroundColor: '#f5f5f5', color: '#666' }}
+              />
+            </Form.Item>
 
-          <Form.Item name="description" label="描述">
-            <Input.TextArea rows={2} placeholder="请输入角色描述" />
-          </Form.Item>
+            <Form.Item name="description" label="描述">
+              <Input.TextArea rows={2} placeholder="请输入角色描述" />
+            </Form.Item>
+          </div>
 
-          <Form.Item label="权限配置">
-            <Tree
-              checkable
-              treeData={permissionTreeData}
-              checkedKeys={selectedPermissions}
-              onCheck={(checkedKeys) => setSelectedPermissions(checkedKeys as string[])}
-            />
-          </Form.Item>
+          <div className="form-section">
+            <div className="form-section-title business">权限配置</div>
+            <Form.Item label="权限配置">
+              <Tree
+                checkable
+                treeData={permissionTreeData}
+                checkedKeys={selectedPermissions}
+                onCheck={(checkedKeys) => setSelectedPermissions(checkedKeys as string[])}
+              />
+            </Form.Item>
+          </div>
         </Form>
       </Modal>
 

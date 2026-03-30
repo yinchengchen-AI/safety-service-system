@@ -26,13 +26,6 @@ import {
   DeleteOutlined,
   EyeOutlined,
   EnvironmentOutlined,
-  BankOutlined,
-  BarcodeOutlined,
-  TrademarkOutlined,
-  CreditCardOutlined,
-  TeamOutlined,
-  UserOutlined,
-  FileTextOutlined,
 } from '@ant-design/icons'
 import { companyApi, Company, CompanyQuery } from '@/api/companies'
 import { userApi } from '@/api/users'
@@ -596,38 +589,17 @@ const CompanyList = () => {
           style={{ marginTop: -8 }}
         >
           {/* 基本信息区块 */}
-          <div style={{ 
-            background: '#f6ffed', 
-            border: '1px solid #b7eb8f', 
-            borderRadius: 6, 
-            padding: '10px 14px',
-            marginBottom: 10 
-          }}>
-            <div style={{ 
-              fontSize: 14, 
-              fontWeight: 600, 
-              color: '#52c41a',
-              marginBottom: 10,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6
-            }}>
-              <BankOutlined /> 基本信息
-            </div>
+          <div className="form-section">
+            <div className="form-section-title basic">基本信息</div>
             
             <Row gutter={12}>
               <Col span={24}>
                 <Form.Item
                   name="name"
-                  label={<span style={{ fontSize: 13, fontWeight: 500 }}>企业名称</span>}
+                  label="企业名称"
                   rules={[{ required: true, message: '请输入企业名称' }]}
-                  style={{ marginBottom: 8 }}
                 >
-                  <Input 
-                    placeholder="请输入企业全称" 
-                    size="middle"
-                    prefix={<BankOutlined style={{ color: '#52c41a', fontSize: 14 }} />}
-                  />
+                  <Input placeholder="请输入企业全称" />
                 </Form.Item>
               </Col>
             </Row>
@@ -636,15 +608,12 @@ const CompanyList = () => {
               <Col span={12}>
                 <Form.Item
                   name="code"
-                  label={<span style={{ fontSize: 13, fontWeight: 500 }}>客户编码</span>}
+                  label="客户编码"
                   rules={[{ required: true, message: '请输入客户编码' }]}
-                  style={{ marginBottom: 8 }}
                 >
                   <Input 
                     readOnly 
-                    size="small"
                     placeholder="系统自动生成" 
-                    prefix={<BarcodeOutlined style={{ color: '#8c8c8c', fontSize: 14 }} />}
                     style={{ backgroundColor: '#f5f5f5', color: '#666' }}
                   />
                 </Form.Item>
@@ -652,14 +621,9 @@ const CompanyList = () => {
               <Col span={12}>
                 <Form.Item 
                   name="short_name" 
-                  label={<span style={{ fontSize: 13, fontWeight: 500 }}>企业简称</span>}
-                  style={{ marginBottom: 8 }}
+                  label="企业简称"
                 >
-                  <Input 
-                    size="small"
-                    placeholder="请输入企业简称"
-                    prefix={<TrademarkOutlined style={{ color: '#1890ff', fontSize: 14 }} />}
-                  />
+                  <Input placeholder="请输入企业简称" />
                 </Form.Item>
               </Col>
             </Row>
@@ -668,50 +632,25 @@ const CompanyList = () => {
               <Col span={24}>
                 <Form.Item 
                   name="unified_code" 
-                  label={<span style={{ fontSize: 13, fontWeight: 500 }}>统一社会信用代码</span>}
-                  style={{ marginBottom: 0 }}
+                  label="统一社会信用代码"
                 >
-                  <Input 
-                    size="small"
-                    placeholder="请输入18位统一社会信用代码"
-                    prefix={<CreditCardOutlined style={{ color: '#722ed1', fontSize: 14 }} />}
-                  />
+                  <Input placeholder="请输入18位统一社会信用代码" />
                 </Form.Item>
               </Col>
             </Row>
           </div>
 
           {/* 业务信息区块 */}
-          <div style={{ 
-            background: '#e6f7ff', 
-            border: '1px solid #91d5ff', 
-            borderRadius: 6, 
-            padding: '10px 14px',
-            marginBottom: 10 
-          }}>
-            <div style={{ 
-              fontSize: 14, 
-              fontWeight: 600, 
-              color: '#1890ff',
-              marginBottom: 10,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6
-            }}>
-              <TeamOutlined /> 业务信息
-            </div>
+          <div className="form-section">
+            <div className="form-section-title business">业务信息</div>
             
             <Row gutter={12}>
               <Col span={8}>
                 <Form.Item 
                   name="industry" 
-                  label={<span style={{ fontSize: 13, fontWeight: 500 }}>所属行业</span>}
-                  style={{ marginBottom: 8 }}
+                  label="所属行业"
                 >
-                  <Select 
-                    size="small"
-                    placeholder="请选择行业"
-                  >
+                  <Select placeholder="请选择行业">
                     <Option value="化工">化工</Option>
                     <Option value="制造业">制造业</Option>
                     <Option value="矿业">矿业</Option>
@@ -724,13 +663,9 @@ const CompanyList = () => {
               <Col span={8}>
                 <Form.Item 
                   name="scale" 
-                  label={<span style={{ fontSize: 13, fontWeight: 500 }}>企业规模</span>}
-                  style={{ marginBottom: 8 }}
+                  label="企业规模"
                 >
-                  <Select 
-                    size="small"
-                    placeholder="请选择规模"
-                  >
+                  <Select placeholder="请选择规模">
                     <Option value="small">小型 (&lt;50人)</Option>
                     <Option value="medium">中型 (50-300人)</Option>
                     <Option value="large">大型 (300-1000人)</Option>
@@ -741,11 +676,10 @@ const CompanyList = () => {
               <Col span={8}>
                 <Form.Item 
                   name="status" 
-                  label={<span style={{ fontSize: 13, fontWeight: 500 }}>客户状态</span>}
+                  label="客户状态"
                   initialValue="potential"
-                  style={{ marginBottom: 8 }}
                 >
-                  <Select size="small" placeholder="请选择状态">
+                  <Select placeholder="请选择状态">
                     <Option value="potential">潜在客户</Option>
                     <Option value="active">合作中</Option>
                     <Option value="inactive">暂停合作</Option>
@@ -759,14 +693,11 @@ const CompanyList = () => {
               <Col span={24}>
                 <Form.Item 
                   name="manager_id" 
-                  label={<span style={{ fontSize: 13, fontWeight: 500 }}>负责人</span>}
-                  style={{ marginBottom: 0 }}
+                  label="负责人"
                 >
                   <Select 
-                    size="small"
                     placeholder="请选择负责人" 
                     allowClear
-                    prefix={<UserOutlined style={{ color: '#1890ff', fontSize: 14 }} />}
                   >
                     {users.map((user) => (
                       <Option key={user.id} value={user.id}>
@@ -780,24 +711,8 @@ const CompanyList = () => {
           </div>
 
           {/* 属地信息区块 */}
-          <div style={{ 
-            background: '#fff7e6', 
-            border: '1px solid #ffd591', 
-            borderRadius: 6, 
-            padding: '10px 14px',
-            marginBottom: 10 
-          }}>
-            <div style={{ 
-              fontSize: 14, 
-              fontWeight: 600, 
-              color: '#fa8c16',
-              marginBottom: 10,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6
-            }}>
-              <EnvironmentOutlined /> 属地信息
-            </div>
+          <div className="form-section">
+            <div className="form-section-title location">属地信息</div>
             
             {/* 隐藏字段，用于提交数据 */}
             <Form.Item name="province" hidden><Input /></Form.Item>
@@ -808,12 +723,10 @@ const CompanyList = () => {
             <Row gutter={12}>
               <Col span={24}>
                 <Form.Item 
-                  label={<span style={{ fontSize: 13, fontWeight: 500 }}>所在地区</span>}
+                  label="所在地区"
                   required
-                  style={{ marginBottom: 8 }}
                 >
                   <Cascader
-                    size="small"
                     value={districtValue}
                     options={hangzhouDistricts}
                     placeholder="请选择区/县、镇街"
@@ -841,12 +754,10 @@ const CompanyList = () => {
               <Col span={24}>
                 <Form.Item 
                   name="address" 
-                  label={<span style={{ fontSize: 13, fontWeight: 500 }}>详细地址</span>}
-                  style={{ marginBottom: 0 }}
+                  label="详细地址"
                 >
                   <TextArea 
                     rows={1}
-                    size="small"
                     placeholder="请输入详细地址（已自动填充，可补充具体门牌号）"
                   />
                 </Form.Item>
@@ -855,34 +766,17 @@ const CompanyList = () => {
           </div>
 
           {/* 其他信息区块 */}
-          <div style={{ 
-            background: '#f9f0ff', 
-            border: '1px solid #d3adf7', 
-            borderRadius: 6, 
-            padding: '10px 14px',
-          }}>
-            <div style={{ 
-              fontSize: 14, 
-              fontWeight: 600, 
-              color: '#722ed1',
-              marginBottom: 10,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6
-            }}>
-              <FileTextOutlined /> 其他信息
-            </div>
+          <div className="form-section">
+            <div className="form-section-title other">其他信息</div>
             
             <Row gutter={12}>
               <Col span={24}>
                 <Form.Item 
                   name="remark" 
-                  label={<span style={{ fontSize: 13, fontWeight: 500 }}>备注</span>}
-                  style={{ marginBottom: 0 }}
+                  label="备注"
                 >
                   <TextArea 
                     rows={1}
-                    size="small"
                     placeholder="请输入备注信息"
                   />
                 </Form.Item>

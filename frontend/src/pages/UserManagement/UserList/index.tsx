@@ -12,13 +12,11 @@ import {
   Modal,
   Form,
   Select,
-  TreeSelect,
   message,
   Tooltip,
 } from 'antd'
 import {
   PlusOutlined,
-  SearchOutlined,
   ReloadOutlined,
   MoreOutlined,
   EditOutlined,
@@ -28,7 +26,7 @@ import {
   KeyOutlined,
 } from '@ant-design/icons'
 import { userApi, departmentApi } from '@/api'
-import { User, UserQuery, Role, Department } from '@/types'
+import { User, UserQuery } from '@/types'
 import './style.css'
 
 const { Search } = Input
@@ -41,7 +39,7 @@ interface UserFormData {
   email?: string
   password?: string
   department_id?: number
-  status: string
+  status: 'active' | 'inactive' | 'locked'
   role_ids: number[]
 }
 
@@ -120,7 +118,7 @@ const UserList = () => {
 
   // 切换状态 mutation
   const toggleStatusMutation = useMutation({
-    mutationFn: ({ id, status }: { id: number; status: string }) =>
+    mutationFn: ({ id, status }: { id: number; status: 'active' | 'inactive' | 'locked' }) =>
       userApi.updateUser(id, { status }),
     onSuccess: (_, variables) => {
       message.success(variables.status === 'active' ? '已启用' : '已禁用')
@@ -349,73 +347,79 @@ const UserList = () => {
         width={600}
         confirmLoading={createMutation.isPending || updateMutation.isPending}
       >
-        <Form form={form} layout="vertical" onFinish={handleSubmit}>
-          <Form.Item
-            name="username"
-            label="用户名"
-            rules={[{ required: true, message: '请输入用户名' }]}
-          >
-            <Input disabled={!!editingUser} placeholder="请输入用户名" />
-          </Form.Item>
-
-          <Form.Item name="real_name" label="真实姓名">
-            <Input placeholder="请输入真实姓名" />
-          </Form.Item>
-
-          <Form.Item name="phone" label="手机号">
-            <Input placeholder="请输入手机号" />
-          </Form.Item>
-
-          <Form.Item name="email" label="邮箱">
-            <Input placeholder="请输入邮箱" />
-          </Form.Item>
-
-          {!editingUser && (
+        <Form form={form} layout="vertical" onFinish={handleSubmit} style={{ marginTop: -8 }}>
+          <div className="form-section">
+            <div className="form-section-title basic">基本信息</div>
             <Form.Item
-              name="password"
-              label="初始密码"
-              rules={[{ required: true, message: '请输入初始密码' }]}
+              name="username"
+              label="用户名"
+              rules={[{ required: true, message: '请输入用户名' }]}
             >
-              <Input.Password placeholder="请输入初始密码" />
+              <Input disabled={!!editingUser} placeholder="请输入用户名" />
             </Form.Item>
-          )}
 
-          <Form.Item name="department_id" label="所属部门">
-            <Select 
-              placeholder="请选择部门" 
-              allowClear
-              showSearch
-              optionFilterProp="children"
-            >
-              {departments.map((dept) => (
-                <Option key={dept.id} value={dept.id}>
-                  {dept.name}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
+            <Form.Item name="real_name" label="真实姓名">
+              <Input placeholder="请输入真实姓名" />
+            </Form.Item>
 
-          <Form.Item name="role_ids" label="角色">
-            <Select 
-              mode="multiple" 
-              placeholder="请选择角色"
-              showSearch
-              optionFilterProp="children"
-            >
-              {roles.map((role) => (
-                <Option key={role.id} value={role.id}>
-                  {role.name}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
+            <Form.Item name="phone" label="手机号">
+              <Input placeholder="请输入手机号" />
+            </Form.Item>
 
-          <Form.Item name="status" label="状态" initialValue="active">
-            <Select placeholder="请选择状态">
-              <Option value="active">正常</Option>
-              <Option value="inactive">禁用</Option>
-            </Select>
-          </Form.Item>
+            <Form.Item name="email" label="邮箱">
+              <Input placeholder="请输入邮箱" />
+            </Form.Item>
+
+            {!editingUser && (
+              <Form.Item
+                name="password"
+                label="初始密码"
+                rules={[{ required: true, message: '请输入初始密码' }]}
+              >
+                <Input.Password placeholder="请输入初始密码" />
+              </Form.Item>
+            )}
+          </div>
+
+          <div className="form-section">
+            <div className="form-section-title business">组织信息</div>
+            <Form.Item name="department_id" label="所属部门">
+              <Select 
+                placeholder="请选择部门" 
+                allowClear
+                showSearch
+                optionFilterProp="children"
+              >
+                {departments.map((dept) => (
+                  <Option key={dept.id} value={dept.id}>
+                    {dept.name}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+
+            <Form.Item name="role_ids" label="角色">
+              <Select 
+                mode="multiple" 
+                placeholder="请选择角色"
+                showSearch
+                optionFilterProp="children"
+              >
+                {roles.map((role) => (
+                  <Option key={role.id} value={role.id}>
+                    {role.name}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+
+            <Form.Item name="status" label="状态" initialValue="active">
+              <Select placeholder="请选择状态">
+                <Option value="active">正常</Option>
+                <Option value="inactive">禁用</Option>
+              </Select>
+            </Form.Item>
+          </div>
         </Form>
       </Modal>
     </div>

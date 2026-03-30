@@ -1,0 +1,39 @@
+.statistics-dashboard {
+  padding: 24px;
+}
+
+.filter-card {
+  margin-bottom: 16px;
+}
+
+.overview-row {
+  margin-bottom: 16px;
+}
+
+.stat-footer {
+  margin-top: 8px;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.charts-row {
+  margin-bottom: 16px;
+}
+
+.system-row {
+  margin-bottom: 16px;
+}
+
+.statistics-dashboard .ant-card {
+  border-radius: 8px;
+}
+
+.statistics-dashboard .ant-statistic-title {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.statistics-dashboard .ant-statistic-content {
+  font-size: 28px;
+  font-weight: 600;
+}

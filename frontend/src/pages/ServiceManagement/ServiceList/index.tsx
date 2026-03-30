@@ -24,9 +24,6 @@ import {
   DeleteOutlined,
   EyeOutlined,
   SafetyCertificateOutlined,
-  FileTextOutlined,
-  UserOutlined,
-  CommentOutlined,
 } from '@ant-design/icons'
 import dayjs from 'dayjs'
 import { contractApi } from '@/api/contracts'
@@ -382,38 +379,17 @@ const ServiceList = () => {
           style={{ marginTop: -8 }}
         >
           {/* 基本信息区块 */}
-          <div style={{ 
-            background: '#f6ffed', 
-            border: '1px solid #b7eb8f', 
-            borderRadius: 6, 
-            padding: '10px 14px',
-            marginBottom: 10 
-          }}>
-            <div style={{ 
-              fontSize: 14, 
-              fontWeight: 600, 
-              color: '#52c41a',
-              marginBottom: 10,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6
-            }}>
-              <FileTextOutlined /> 基本信息
-            </div>
+          <div className="form-section">
+            <div className="form-section-title basic">基本信息</div>
             
             <Row gutter={12}>
               <Col span={24}>
                 <Form.Item
                   name="name"
-                  label={<span style={{ fontSize: 13, fontWeight: 500 }}>服务名称</span>}
+                  label="服务名称"
                   rules={[{ required: true, message: '请输入服务名称' }]}
-                  style={{ marginBottom: 8 }}
                 >
-                  <Input 
-                    placeholder="请输入服务名称" 
-                    size="middle"
-                    prefix={<FileTextOutlined style={{ color: '#52c41a', fontSize: 14 }} />}
-                  />
+                  <Input placeholder="请输入服务名称" />
                 </Form.Item>
               </Col>
             </Row>
@@ -422,16 +398,13 @@ const ServiceList = () => {
               <Col span={24}>
                 <Form.Item
                   name="contract_id"
-                  label={<span style={{ fontSize: 13, fontWeight: 500 }}>关联合同</span>}
+                  label="关联合同"
                   rules={[{ required: true, message: '请选择关联合同' }]}
-                  style={{ marginBottom: 0 }}
                 >
                   <Select
-                    size="small"
                     placeholder="请选择关联合同"
                     showSearch
                     optionFilterProp="children"
-                    prefix={<SafetyCertificateOutlined style={{ color: '#52c41a', fontSize: 14 }} />}
                   >
                     {contracts.map((contract) => (
                       <Option key={contract.id} value={contract.id}>
@@ -445,35 +418,18 @@ const ServiceList = () => {
           </div>
 
           {/* 服务信息区块 */}
-          <div style={{ 
-            background: '#e6f7ff', 
-            border: '1px solid #91d5ff', 
-            borderRadius: 6, 
-            padding: '10px 14px',
-            marginBottom: 10 
-          }}>
-            <div style={{ 
-              fontSize: 14, 
-              fontWeight: 600, 
-              color: '#1890ff',
-              marginBottom: 10,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6
-            }}>
-              <SafetyCertificateOutlined /> 服务信息
-            </div>
+          <div className="form-section">
+            <div className="form-section-title business">服务信息</div>
             
             <Row gutter={12}>
               <Col span={12}>
                 <Form.Item
                   name="status"
-                  label={<span style={{ fontSize: 13, fontWeight: 500 }}>服务状态</span>}
+                  label="服务状态"
                   rules={[{ required: true }]}
                   initialValue="pending"
-                  style={{ marginBottom: 8 }}
                 >
-                  <Select size="small" placeholder="请选择状态">
+                  <Select placeholder="请选择状态">
                     <Option value="pending">待执行</Option>
                     <Option value="executing">执行中</Option>
                     <Option value="completed">已完成</Option>
@@ -484,14 +440,11 @@ const ServiceList = () => {
               <Col span={12}>
                 <Form.Item
                   name="manager_id"
-                  label={<span style={{ fontSize: 13, fontWeight: 500 }}>负责人</span>}
-                  style={{ marginBottom: 8 }}
+                  label="负责人"
                 >
                   <Select
-                    size="small"
                     placeholder="请选择负责人"
                     allowClear
-                    prefix={<UserOutlined style={{ color: '#1890ff', fontSize: 14 }} />}
                   >
                     {users.map((user) => (
                       <Option key={user.id} value={user.id}>
@@ -507,12 +460,10 @@ const ServiceList = () => {
               <Col span={12}>
                 <Form.Item
                   name="service_date"
-                  label={<span style={{ fontSize: 13, fontWeight: 500 }}>计划服务日期</span>}
+                  label="计划服务日期"
                   rules={[{ required: true }]}
-                  style={{ marginBottom: 8 }}
                 >
                   <DatePicker 
-                    size="small"
                     style={{ width: '100%' }} 
                     placeholder="请选择日期"
                   />
@@ -521,11 +472,9 @@ const ServiceList = () => {
               <Col span={12}>
                 <Form.Item
                   name="completion_date"
-                  label={<span style={{ fontSize: 13, fontWeight: 500 }}>实际完成日期</span>}
-                  style={{ marginBottom: 8 }}
+                  label="实际完成日期"
                 >
                   <DatePicker 
-                    size="small"
                     style={{ width: '100%' }} 
                     placeholder="完成后填写"
                   />
@@ -537,12 +486,10 @@ const ServiceList = () => {
               <Col span={24}>
                 <Form.Item
                   name="content"
-                  label={<span style={{ fontSize: 13, fontWeight: 500 }}>服务内容</span>}
-                  style={{ marginBottom: 0 }}
+                  label="服务内容"
                 >
                   <TextArea 
                     rows={2}
-                    size="small"
                     placeholder="请输入服务内容" 
                   />
                 </Form.Item>
@@ -551,34 +498,17 @@ const ServiceList = () => {
           </div>
 
           {/* 备注信息区块 */}
-          <div style={{ 
-            background: '#f9f0ff', 
-            border: '1px solid #d3adf7', 
-            borderRadius: 6, 
-            padding: '10px 14px',
-          }}>
-            <div style={{ 
-              fontSize: 14, 
-              fontWeight: 600, 
-              color: '#722ed1',
-              marginBottom: 10,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6
-            }}>
-              <CommentOutlined /> 备注信息
-            </div>
+          <div className="form-section">
+            <div className="form-section-title other">备注信息</div>
             
             <Row gutter={12}>
               <Col span={24}>
                 <Form.Item
                   name="remark"
-                  label={<span style={{ fontSize: 13, fontWeight: 500 }}>备注</span>}
-                  style={{ marginBottom: 0 }}
+                  label="备注"
                 >
                   <TextArea 
                     rows={1}
-                    size="small"
                     placeholder="请输入备注信息" 
                   />
                 </Form.Item>

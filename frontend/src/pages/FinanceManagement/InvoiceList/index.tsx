@@ -21,12 +21,10 @@ import {
 } from 'antd'
 import {
   PlusOutlined,
-  SearchOutlined,
   ReloadOutlined,
   MoreOutlined,
   EditOutlined,
   DeleteOutlined,
-  EyeOutlined,
 } from '@ant-design/icons'
 import dayjs from 'dayjs'
 import { invoiceApi, Invoice, InvoiceQuery } from '@/api/invoices'
@@ -35,7 +33,6 @@ import './style.css'
 
 const { Search } = Input
 const { Option } = Select
-const { RangePicker } = DatePicker
 
 const InvoiceList = () => {
   const queryClient = useQueryClient()
@@ -44,7 +41,6 @@ const InvoiceList = () => {
     page_size: 10,
   })
   const [modalVisible, setModalVisible] = useState(false)
-  const [detailVisible, setDetailVisible] = useState(false)
   const [editingInvoice, setEditingInvoice] = useState<Invoice | null>(null)
   const [form] = Form.useForm()
 
@@ -164,12 +160,6 @@ const InvoiceList = () => {
       render: (_: any, record: Invoice) => {
         const items = [
           {
-            key: 'view',
-            icon: <EyeOutlined />,
-            label: '查看详情',
-            onClick: () => handleView(record),
-          },
-          {
             key: 'edit',
             icon: <EditOutlined />,
             label: '编辑',
@@ -208,11 +198,6 @@ const InvoiceList = () => {
     setEditingInvoice(null)
     form.resetFields()
     setModalVisible(true)
-  }
-
-  const handleView = (invoice: Invoice) => {
-    setEditingInvoice(invoice)
-    setDetailVisible(true)
   }
 
   const handleEdit = (invoice: Invoice) => {
@@ -331,52 +316,58 @@ const InvoiceList = () => {
         width={700}
         confirmLoading={createMutation.isPending || updateMutation.isPending}
       >
-        <Form form={form} layout="vertical" onFinish={handleSubmit}>
-          <Form.Item
-            name="type"
-            label="发票类型"
-            rules={[{ required: true, message: '请选择发票类型' }]}
-          >
-            <Select placeholder="请选择发票类型">
-              <Option value="special">增值税专用发票</Option>
-              <Option value="normal">增值税普通发票</Option>
-              <Option value="electronic">电子发票</Option>
-            </Select>
-          </Form.Item>
+        <Form form={form} layout="vertical" onFinish={handleSubmit} style={{ marginTop: -8 }}>
+          <div className="form-section">
+            <div className="form-section-title basic">基本信息</div>
+            <Form.Item
+              name="type"
+              label="发票类型"
+              rules={[{ required: true, message: '请选择发票类型' }]}
+            >
+              <Select placeholder="请选择发票类型">
+                <Option value="special">增值税专用发票</Option>
+                <Option value="normal">增值税普通发票</Option>
+                <Option value="electronic">电子发票</Option>
+              </Select>
+            </Form.Item>
 
-          <Form.Item
-            name="amount"
-            label="开票金额"
-            rules={[{ required: true, message: '请输入开票金额' }]}
-          >
-            <InputNumber
-              style={{ width: '100%' }}
-              prefix="¥"
-              placeholder="请输入开票金额"
-              min={0}
-              precision={2}
-            />
-          </Form.Item>
+            <Form.Item
+              name="amount"
+              label="开票金额"
+              rules={[{ required: true, message: '请输入开票金额' }]}
+            >
+              <InputNumber
+                style={{ width: '100%' }}
+                prefix="¥"
+                placeholder="请输入开票金额"
+                min={0}
+                precision={2}
+              />
+            </Form.Item>
 
-          <Form.Item
-            name="buyer_name"
-            label="购方名称"
-            rules={[{ required: true, message: '请输入购方名称' }]}
-          >
-            <Input placeholder="请输入购方名称" />
-          </Form.Item>
+            <Form.Item
+              name="buyer_name"
+              label="购方名称"
+              rules={[{ required: true, message: '请输入购方名称' }]}
+            >
+              <Input placeholder="请输入购方名称" />
+            </Form.Item>
 
-          <Form.Item name="buyer_tax_no" label="购方税号">
-            <Input placeholder="请输入购方税号" />
-          </Form.Item>
+            <Form.Item name="buyer_tax_no" label="购方税号">
+              <Input placeholder="请输入购方税号" />
+            </Form.Item>
+          </div>
 
-          <Form.Item
-            name="issue_date"
-            label="开票日期"
-            rules={[{ required: true, message: '请选择开票日期' }]}
-          >
-            <DatePicker style={{ width: '100%' }} />
-          </Form.Item>
+          <div className="form-section">
+            <div className="form-section-title other">其他信息</div>
+            <Form.Item
+              name="issue_date"
+              label="开票日期"
+              rules={[{ required: true, message: '请选择开票日期' }]}
+            >
+              <DatePicker style={{ width: '100%' }} />
+            </Form.Item>
+          </div>
 
           {/* 编辑时显示附件管理 */}
           {editingInvoice && (

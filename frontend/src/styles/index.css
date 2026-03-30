@@ -122,3 +122,70 @@ html, body, #root {
   font-size: 32px;
   font-weight: 600;
 }
+
+/* ==================== 统一表单区块样式 ==================== */
+.form-section {
+  background: #fafafa;
+  border: 1px solid #f0f0f0;
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+}
+
+.form-section-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-section-title::before {
+  content: '';
+  display: inline-block;
+  width: 3px;
+  height: 14px;
+  border-radius: 2px;
+}
+
+/* 基本信息 - 绿色 */
+.form-section-title.basic {
+  color: #52c41a;
+}
+.form-section-title.basic::before {
+  background: #52c41a;
+}
+
+/* 业务信息 - 蓝色 */
+.form-section-title.business {
+  color: #1890ff;
+}
+.form-section-title.business::before {
+  background: #1890ff;
+}
+
+/* 属地/服务信息 - 橙色 */
+.form-section-title.location {
+  color: #fa8c16;
+}
+.form-section-title.location::before {
+  background: #fa8c16;
+}
+
+/* 其他信息 - 灰色 */
+.form-section-title.other {
+  color: #595959;
+}
+.form-section-title.other::before {
+  background: #595959;
+}
+
+/* 表单区块内的表单项间距统一 */
+.form-section .ant-form-item {
+  margin-bottom: 12px;
+}
+
+.form-section .ant-form-item:last-child {
+  margin-bottom: 0;
+}

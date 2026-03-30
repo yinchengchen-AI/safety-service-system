@@ -499,71 +499,80 @@ const DocumentList = () => {
         }}
         confirmLoading={updateMutation.isPending}
       >
-        <Form form={editForm} layout="vertical">
-          <Form.Item
-            name="title"
-            label="文档标题"
-            rules={[{ required: true, message: '请输入文档标题' }]}
-          >
-            <Input placeholder="请输入文档标题" />
-          </Form.Item>
-          <Form.Item name="description" label="文档描述">
-            <Input.TextArea rows={3} placeholder="请输入文档描述" />
-          </Form.Item>
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item name="category_id" label="分类">
-                <Select placeholder="选择分类" allowClear>
-                  {categories.map(cat => (
-                    <Option key={cat.id} value={cat.id}>{cat.name}</Option>
-                  ))}
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item name="type" label="文档类型">
-                <Select placeholder="选择类型">
-                  {DOCUMENT_TYPES.map(t => (
-                    <Option key={t.value} value={t.value}>{t.label}</Option>
-                  ))}
-                </Select>
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item name="version" label="版本号">
-                <Input placeholder="如 1.0" />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item name="status" label="状态">
-                <Select placeholder="选择状态">
-                  {DOCUMENT_STATUS.map(s => (
-                    <Option key={s.value} value={s.value}>{s.label}</Option>
-                  ))}
-                </Select>
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item name="is_public" label="是否公开" valuePropName="checked">
-                <Select>
-                  <Option value={true}>公开</Option>
-                  <Option value={false}>不公开</Option>
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item name="allow_download" label="允许下载" valuePropName="checked">
-                <Select>
-                  <Option value={true}>允许</Option>
-                  <Option value={false}>不允许</Option>
-                </Select>
-              </Form.Item>
-            </Col>
-          </Row>
+        <Form form={editForm} layout="vertical" style={{ marginTop: -8 }}>
+          <div className="form-section">
+            <div className="form-section-title basic">基本信息</div>
+            <Form.Item
+              name="title"
+              label="文档标题"
+              rules={[{ required: true, message: '请输入文档标题' }]}
+            >
+              <Input placeholder="请输入文档标题" />
+            </Form.Item>
+            <Form.Item name="description" label="文档描述">
+              <Input.TextArea rows={3} placeholder="请输入文档描述" />
+            </Form.Item>
+          </div>
+          <div className="form-section">
+            <div className="form-section-title business">分类信息</div>
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item name="category_id" label="分类">
+                  <Select placeholder="选择分类" allowClear>
+                    {categories.map(cat => (
+                      <Option key={cat.id} value={cat.id}>{cat.name}</Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item name="type" label="文档类型">
+                  <Select placeholder="选择类型">
+                    {DOCUMENT_TYPES.map(t => (
+                      <Option key={t.value} value={t.value}>{t.label}</Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+            </Row>
+          </div>
+          <div className="form-section">
+            <div className="form-section-title other">其他信息</div>
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item name="version" label="版本号">
+                  <Input placeholder="如 1.0" />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item name="status" label="状态">
+                  <Select placeholder="选择状态">
+                    {DOCUMENT_STATUS.map(s => (
+                      <Option key={s.value} value={s.value}>{s.label}</Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item name="is_public" label="是否公开" valuePropName="checked">
+                  <Select>
+                    <Option value={true}>公开</Option>
+                    <Option value={false}>不公开</Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item name="allow_download" label="允许下载" valuePropName="checked">
+                  <Select>
+                    <Option value={true}>允许</Option>
+                    <Option value={false}>不允许</Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+            </Row>
+          </div>
         </Form>
       </Modal>
 

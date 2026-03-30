@@ -17,6 +17,12 @@ import ServiceList from '@/pages/ServiceManagement/ServiceList'
 import DocumentList from '@/pages/DocumentManagement/DocumentList'
 import DocumentUpload from '@/pages/DocumentManagement/DocumentUpload'
 import LogManagement from '@/pages/SystemSettings/LogManagement'
+import NoticeList from '@/pages/NoticeManagement/NoticeList'
+import NoticeForm from '@/pages/NoticeManagement/NoticeForm'
+import NoticeDetail from '@/pages/NoticeManagement/NoticeDetail'
+import NoticeStats from '@/pages/NoticeManagement/NoticeStats'
+import StatisticsDashboard from '@/pages/StatisticsAnalysis/StatisticsDashboard'
+import LoginLogPage from '@/pages/StatisticsAnalysis/LoginLog'
 import Profile from '@/pages/Profile'
 
 // 布局组件
@@ -116,6 +122,17 @@ function App() {
             
             {/* 系统设置 */}
             <Route path="logs" element={<LogManagement />} />
+            <Route path="login-logs" element={<LoginLogPage />} />
+            
+            {/* 通知公告 */}
+            <Route path="notices" element={<NoticeList />} />
+            <Route path="notices/create" element={<NoticeForm />} />
+            <Route path="notices/edit/:id" element={<NoticeForm />} />
+            <Route path="notices/detail/:id" element={<NoticeDetail />} />
+            <Route path="notices/stats/:id" element={<NoticeStats />} />
+            
+            {/* 统计分析 */}
+            <Route path="statistics" element={<StatisticsDashboard />} />
             
             {/* 个人中心 */}
             <Route path="profile" element={<Profile />} />

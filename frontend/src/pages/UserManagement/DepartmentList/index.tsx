@@ -346,44 +346,50 @@ const DepartmentList = () => {
         width={600}
         confirmLoading={createMutation.isPending || updateMutation.isPending}
       >
-        <Form form={form} layout="vertical" onFinish={handleSubmit}>
-          <Form.Item
-            name="name"
-            label="部门名称"
-            rules={[{ required: true, message: '请输入部门名称' }]}
-          >
-            <Input placeholder="请输入部门名称" />
-          </Form.Item>
+        <Form form={form} layout="vertical" onFinish={handleSubmit} style={{ marginTop: -8 }}>
+          <div className="form-section">
+            <div className="form-section-title basic">基本信息</div>
+            <Form.Item
+              name="name"
+              label="部门名称"
+              rules={[{ required: true, message: '请输入部门名称' }]}
+            >
+              <Input placeholder="请输入部门名称" />
+            </Form.Item>
 
-          <Form.Item
-            name="code"
-            label="部门编码"
-            rules={[{ required: true, message: '请输入部门编码' }]}
-          >
-            <Input
-              readOnly
-              placeholder="系统自动生成"
-              style={{ backgroundColor: '#f5f5f5', color: '#666' }}
-            />
-          </Form.Item>
+            <Form.Item
+              name="code"
+              label="部门编码"
+              rules={[{ required: true, message: '请输入部门编码' }]}
+            >
+              <Input
+                readOnly
+                placeholder="系统自动生成"
+                style={{ backgroundColor: '#f5f5f5', color: '#666' }}
+              />
+            </Form.Item>
+          </div>
 
-          <Form.Item name="parent_id" label="上级部门">
-            <TreeSelect
-              treeData={deptTreeData}
-              placeholder="请选择上级部门（不选则为顶级部门）"
-              allowClear
-              treeDefaultExpandAll
-              disabled={editingDept?.id === 1} // 根部门不能修改上级
-            />
-          </Form.Item>
+          <div className="form-section">
+            <div className="form-section-title other">其他信息</div>
+            <Form.Item name="parent_id" label="上级部门">
+              <TreeSelect
+                treeData={deptTreeData}
+                placeholder="请选择上级部门（不选则为顶级部门）"
+                allowClear
+                treeDefaultExpandAll
+                disabled={editingDept?.id === 1} // 根部门不能修改上级
+              />
+            </Form.Item>
 
-          <Form.Item name="sort_order" label="排序" initialValue={0}>
-            <Input type="number" placeholder="请输入排序号，数字越小越靠前" />
-          </Form.Item>
+            <Form.Item name="sort_order" label="排序" initialValue={0}>
+              <Input type="number" placeholder="请输入排序号，数字越小越靠前" />
+            </Form.Item>
 
-          <Form.Item name="description" label="描述">
-            <Input.TextArea rows={3} placeholder="请输入部门描述" />
-          </Form.Item>
+            <Form.Item name="description" label="描述">
+              <Input.TextArea rows={3} placeholder="请输入部门描述" />
+            </Form.Item>
+          </div>
         </Form>
       </Modal>
 

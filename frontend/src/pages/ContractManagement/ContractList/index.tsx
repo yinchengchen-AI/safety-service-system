@@ -25,13 +25,6 @@ import {
   EditOutlined,
   DeleteOutlined,
   EyeOutlined,
-  FileTextOutlined,
-  DollarOutlined,
-  SafetyCertificateOutlined,
-  UserOutlined,
-  TeamOutlined,
-  BarcodeOutlined,
-  FileProtectOutlined,
 } from '@ant-design/icons'
 import dayjs from 'dayjs'
 import { contractApi, Contract, ContractQuery } from '@/api/contracts'
@@ -340,55 +333,29 @@ const ContractList = () => {
           style={{ marginTop: -8 }}
         >
           {/* 基本信息区块 */}
-          <div style={{ 
-            background: '#f6ffed', 
-            border: '1px solid #b7eb8f', 
-            borderRadius: 6, 
-            padding: '10px 14px',
-            marginBottom: 10 
-          }}>
-            <div style={{ 
-              fontSize: 14, 
-              fontWeight: 600, 
-              color: '#52c41a',
-              marginBottom: 10,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6
-            }}>
-              <FileTextOutlined /> 基本信息
-            </div>
-            
+          <div className="form-section">
+            <div className="form-section-title basic">基本信息</div>
             <Row gutter={12}>
               <Col span={24}>
                 <Form.Item
                   name="name"
-                  label={<span style={{ fontSize: 13, fontWeight: 500 }}>合同名称</span>}
+                  label="合同名称"
                   rules={[{ required: true, message: '请输入合同名称' }]}
-                  style={{ marginBottom: 8 }}
                 >
-                  <Input 
-                    placeholder="请输入合同名称" 
-                    size="middle"
-                    prefix={<FileTextOutlined style={{ color: '#52c41a', fontSize: 14 }} />}
-                  />
+                  <Input placeholder="请输入合同名称" />
                 </Form.Item>
               </Col>
             </Row>
-            
             <Row gutter={12}>
               <Col span={12}>
                 <Form.Item
                   name="code"
-                  label={<span style={{ fontSize: 13, fontWeight: 500 }}>合同编号</span>}
+                  label="合同编号"
                   rules={[{ required: true, message: '请输入合同编号' }]}
-                  style={{ marginBottom: 8 }}
                 >
                   <Input 
                     readOnly 
-                    size="small"
                     placeholder="系统自动生成" 
-                    prefix={<BarcodeOutlined style={{ color: '#8c8c8c', fontSize: 14 }} />}
                     style={{ backgroundColor: '#f5f5f5', color: '#666' }}
                   />
                 </Form.Item>
@@ -396,14 +363,10 @@ const ContractList = () => {
               <Col span={12}>
                 <Form.Item
                   name="type"
-                  label={<span style={{ fontSize: 13, fontWeight: 500 }}>合同类型</span>}
+                  label="合同类型"
                   rules={[{ required: true, message: '请选择合同类型' }]}
-                  style={{ marginBottom: 8 }}
                 >
-                  <Select 
-                    size="small"
-                    placeholder="请选择合同类型"
-                  >
+                  <Select placeholder="请选择合同类型">
                     <Option value="safety_evaluation">安全评价</Option>
                     <Option value="safety_consulting">安全咨询</Option>
                     <Option value="safety_training">安全培训</Option>
@@ -414,21 +377,17 @@ const ContractList = () => {
                 </Form.Item>
               </Col>
             </Row>
-
             <Row gutter={12}>
               <Col span={12}>
                 <Form.Item
                   name="company_id"
-                  label={<span style={{ fontSize: 13, fontWeight: 500 }}>签约客户</span>}
+                  label="签约客户"
                   rules={[{ required: true, message: '请选择签约客户' }]}
-                  style={{ marginBottom: 0 }}
                 >
                   <Select
-                    size="small"
                     placeholder="请选择签约客户"
                     showSearch
                     optionFilterProp="children"
-                    prefix={<TeamOutlined style={{ color: '#1890ff', fontSize: 14 }} />}
                   >
                     {companies.map((company) => (
                       <Option key={company.id} value={company.id}>
@@ -441,14 +400,11 @@ const ContractList = () => {
               <Col span={12}>
                 <Form.Item
                   name="manager_id"
-                  label={<span style={{ fontSize: 13, fontWeight: 500 }}>负责人</span>}
-                  style={{ marginBottom: 0 }}
+                  label="负责人"
                 >
                   <Select
-                    size="small"
                     placeholder="请选择负责人"
                     allowClear
-                    prefix={<UserOutlined style={{ color: '#1890ff', fontSize: 14 }} />}
                   >
                     {users.map((user) => (
                       <Option key={user.id} value={user.id}>
@@ -462,35 +418,16 @@ const ContractList = () => {
           </div>
 
           {/* 合同信息区块 */}
-          <div style={{ 
-            background: '#e6f7ff', 
-            border: '1px solid #91d5ff', 
-            borderRadius: 6, 
-            padding: '10px 14px',
-            marginBottom: 10 
-          }}>
-            <div style={{ 
-              fontSize: 14, 
-              fontWeight: 600, 
-              color: '#1890ff',
-              marginBottom: 10,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6
-            }}>
-              <FileProtectOutlined /> 合同信息
-            </div>
-            
+          <div className="form-section">
+            <div className="form-section-title business">合同信息</div>
             <Row gutter={12}>
               <Col span={12}>
                 <Form.Item
                   name="amount"
-                  label={<span style={{ fontSize: 13, fontWeight: 500 }}>合同金额</span>}
+                  label="合同金额"
                   rules={[{ required: true, message: '请输入合同金额' }]}
-                  style={{ marginBottom: 8 }}
                 >
                   <InputNumber
-                    size="small"
                     style={{ width: '100%' }}
                     prefix="¥"
                     placeholder="请输入合同金额"
@@ -502,11 +439,10 @@ const ContractList = () => {
               <Col span={12}>
                 <Form.Item
                   name="status"
-                  label={<span style={{ fontSize: 13, fontWeight: 500 }}>合同状态</span>}
+                  label="合同状态"
                   initialValue="draft"
-                  style={{ marginBottom: 8 }}
                 >
-                  <Select size="small" placeholder="请选择状态">
+                  <Select placeholder="请选择状态">
                     <Option value="draft">草稿</Option>
                     <Option value="pending">待审批</Option>
                     <Option value="approved">已审批</Option>
@@ -517,55 +453,31 @@ const ContractList = () => {
                 </Form.Item>
               </Col>
             </Row>
-
             <Row gutter={12}>
               <Col span={24}>
                 <Form.Item
                   name="dates"
-                  label={<span style={{ fontSize: 13, fontWeight: 500 }}>合同期限</span>}
+                  label="合同期限"
                   rules={[{ required: true, message: '请选择合同期限' }]}
-                  style={{ marginBottom: 0 }}
                 >
-                  <RangePicker 
-                    size="small"
-                    style={{ width: '100%' }} 
-                  />
+                  <RangePicker style={{ width: '100%' }} />
                 </Form.Item>
               </Col>
             </Row>
           </div>
 
           {/* 服务信息区块 */}
-          <div style={{ 
-            background: '#fff7e6', 
-            border: '1px solid #ffd591', 
-            borderRadius: 6, 
-            padding: '10px 14px',
-            marginBottom: 10 
-          }}>
-            <div style={{ 
-              fontSize: 14, 
-              fontWeight: 600, 
-              color: '#fa8c16',
-              marginBottom: 10,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6
-            }}>
-              <SafetyCertificateOutlined /> 服务信息
-            </div>
-            
+          <div className="form-section">
+            <div className="form-section-title location">服务信息</div>
             <Row gutter={12}>
               <Col span={12}>
                 <Form.Item
                   name="service_times"
-                  label={<span style={{ fontSize: 13, fontWeight: 500 }}>服务次数</span>}
+                  label="服务次数"
                   rules={[{ required: true, message: '请输入服务次数' }]}
                   initialValue={1}
-                  style={{ marginBottom: 8 }}
                 >
                   <InputNumber
-                    size="small"
                     style={{ width: '100%' }}
                     placeholder="请输入服务次数"
                     min={1}
@@ -575,10 +487,9 @@ const ContractList = () => {
               <Col span={12}>
                 <Form.Item
                   name="service_cycle"
-                  label={<span style={{ fontSize: 13, fontWeight: 500 }}>服务周期</span>}
-                  style={{ marginBottom: 8 }}
+                  label="服务周期"
                 >
-                  <Select size="small" placeholder="请选择服务周期" allowClear>
+                  <Select placeholder="请选择服务周期" allowClear>
                     <Option value="once">一次性</Option>
                     <Option value="monthly">月度</Option>
                     <Option value="quarterly">季度</Option>
@@ -587,51 +498,28 @@ const ContractList = () => {
                 </Form.Item>
               </Col>
             </Row>
-
             <Row gutter={12}>
               <Col span={24}>
                 <Form.Item
                   name="service_content"
-                  label={<span style={{ fontSize: 13, fontWeight: 500 }}>服务内容</span>}
-                  style={{ marginBottom: 0 }}
+                  label="服务内容"
                 >
-                  <TextArea 
-                    rows={2}
-                    size="small"
-                    placeholder="请输入服务内容" 
-                  />
+                  <TextArea rows={2} placeholder="请输入服务内容" />
                 </Form.Item>
               </Col>
             </Row>
           </div>
 
           {/* 其他信息区块 */}
-          <div style={{ 
-            background: '#f9f0ff', 
-            border: '1px solid #d3adf7', 
-            borderRadius: 6, 
-            padding: '10px 14px',
-          }}>
-            <div style={{ 
-              fontSize: 14, 
-              fontWeight: 600, 
-              color: '#722ed1',
-              marginBottom: 10,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6
-            }}>
-              <DollarOutlined /> 其他信息
-            </div>
-            
+          <div className="form-section">
+            <div className="form-section-title other">其他信息</div>
             <Row gutter={12}>
               <Col span={24}>
                 <Form.Item
                   name="payment_terms"
-                  label={<span style={{ fontSize: 13, fontWeight: 500 }}>付款条款</span>}
-                  style={{ marginBottom: 8 }}
+                  label="付款条款"
                 >
-                  <Select size="small" placeholder="请选择付款条款" allowClear>
+                  <Select placeholder="请选择付款条款" allowClear>
                     <Option value="prepay">预付全款</Option>
                     <Option value="prepay_50">预付50%</Option>
                     <Option value="postpay">后付全款</Option>
@@ -640,19 +528,13 @@ const ContractList = () => {
                 </Form.Item>
               </Col>
             </Row>
-
             <Row gutter={12}>
               <Col span={24}>
                 <Form.Item
                   name="remark"
-                  label={<span style={{ fontSize: 13, fontWeight: 500 }}>备注</span>}
-                  style={{ marginBottom: 0 }}
+                  label="备注"
                 >
-                  <TextArea 
-                    rows={1}
-                    size="small"
-                    placeholder="请输入备注信息" 
-                  />
+                  <TextArea rows={1} placeholder="请输入备注信息" />
                 </Form.Item>
               </Col>
             </Row>

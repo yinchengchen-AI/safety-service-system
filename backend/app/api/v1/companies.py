@@ -12,6 +12,21 @@ from app.schemas.base import ResponseSchema
 from app.models.user import User
 from app.models.company import Company, CompanyStatus
 
+
+async def update_company_status_on_contract(db: AsyncSession, company_id: int):
+    """当客户有合同创建时，自动更新客户状态为active
+    
+    此函数应在创建合同后调用
+    """
+    result = await db.execute(
+        select(Company).where(Company.id == company_id)
+    )
+    company = result.scalar_one_or_none()
+    
+    if company and company.status == CompanyStatus.POTENTIAL:
+        company.status = CompanyStatus.ACTIVE
+        await db.flush()
+
 router = APIRouter()
 
 

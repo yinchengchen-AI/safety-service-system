@@ -5,7 +5,7 @@ from fastapi import APIRouter
 
 from app.api.v1 import (
     auth, users, roles, departments, permissions,
-    companies, contracts, invoices, dashboard, attachments, finance, logs, documents
+    companies, contracts, invoices, dashboard, attachments, finance, logs, documents, notices, services
 )
 
 api_router = APIRouter(prefix="/v1")
@@ -42,3 +42,9 @@ api_router.include_router(finance.router, prefix="/finance", tags=["财务管理
 
 # 日志管理
 api_router.include_router(logs.router, prefix="/logs", tags=["日志管理"])
+
+# 通知公告
+api_router.include_router(notices.router, prefix="/notices", tags=["通知公告"])
+
+# 服务管理
+api_router.include_router(services.router, prefix="/services", tags=["服务管理"])

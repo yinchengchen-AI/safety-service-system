@@ -1,6 +1,9 @@
 """
 合同管理接口
 """
+from datetime import date
+from decimal import Decimal
+
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
@@ -12,6 +15,32 @@ from app.schemas.base import ResponseSchema
 from app.models.user import User
 from app.models.contract import Contract, ContractStatus
 from app.models.company import Company
+from app.api.v1.companies import update_company_status_on_contract
+
+
+# 状态机定义：定义允许的状态流转
+def validate_status_transition(old_status: str, new_status: str) -> tuple[bool, str]:
+    """校验合同状态流转是否合法
+    
+    Returns:
+        (是否合法, 错误信息)
+    """
+    valid_transitions = {
+        ContractStatus.DRAFT: [ContractStatus.PENDING, ContractStatus.TERMINATED],
+        ContractStatus.PENDING: [ContractStatus.APPROVED, ContractStatus.DRAFT, ContractStatus.TERMINATED],
+        ContractStatus.APPROVED: [ContractStatus.SIGNED, ContractStatus.DRAFT, ContractStatus.TERMINATED],
+        ContractStatus.SIGNED: [ContractStatus.EXECUTING, ContractStatus.TERMINATED],
+        ContractStatus.EXECUTING: [ContractStatus.COMPLETED, ContractStatus.TERMINATED],
+        ContractStatus.COMPLETED: [],  # 终态
+        ContractStatus.TERMINATED: [],  # 终态
+        ContractStatus.EXPIRED: [],  # 终态
+    }
+    
+    allowed = valid_transitions.get(old_status, [])
+    if new_status in allowed:
+        return True, ""
+    
+    return False, f"不能从{old_status}状态变更为{new_status}状态"
 
 router = APIRouter()
 
@@ -157,8 +186,48 @@ async def create_contract(
         if not result.scalar_one_or_none():
             return ResponseSchema(code=400, message="客户不存在")
     
-    contract = Contract(**data)
+    # 转换数据类型
+    contract_data = {
+        "code": data.get("code"),
+        "name": data.get("name"),
+        "type": data.get("type"),
+        "amount": Decimal(str(data.get("amount", 0))),
+        "company_id": int(data.get("company_id")),
+        "status": data.get("status", "draft"),
+        "service_content": data.get("service_content"),
+        "service_cycle": data.get("service_cycle"),
+        "service_times": int(data.get("service_times", 1)),
+        "payment_terms": data.get("payment_terms"),
+        "manager_id": data.get("manager_id"),
+        "remark": data.get("remark"),
+    }
+    
+    # 处理日期字段
+    if data.get("sign_date"):
+        if isinstance(data["sign_date"], str):
+            contract_data["sign_date"] = date.fromisoformat(data["sign_date"])
+        else:
+            contract_data["sign_date"] = data["sign_date"]
+    
+    if data.get("start_date"):
+        if isinstance(data["start_date"], str):
+            contract_data["start_date"] = date.fromisoformat(data["start_date"])
+        else:
+            contract_data["start_date"] = data["start_date"]
+    
+    if data.get("end_date"):
+        if isinstance(data["end_date"], str):
+            contract_data["end_date"] = date.fromisoformat(data["end_date"])
+        else:
+            contract_data["end_date"] = data["end_date"]
+    
+    contract = Contract(**contract_data)
     db.add(contract)
+    await db.flush()
+    
+    # 更新客户状态（潜在客户 -> 合作中）
+    await update_company_status_on_contract(db, int(data.get("company_id")))
+    
     await db.commit()
     await db.refresh(contract)
     
@@ -181,10 +250,30 @@ async def update_contract(
     if not contract:
         return ResponseSchema(code=404, message="合同不存在")
     
-    # 更新字段
+    # 状态变更校验
+    new_status = data.get("status")
+    if new_status and new_status != contract.status:
+        is_valid, error_msg = validate_status_transition(contract.status, new_status)
+        if not is_valid:
+            return ResponseSchema(code=400, message=error_msg)
+    
+    # 更新字段（处理类型转换）
     for key, value in data.items():
-        if hasattr(contract, key) and key != "id":
-            setattr(contract, key, value)
+        if key == "id" or not hasattr(contract, key):
+            continue
+        
+        # 处理金额字段
+        if key == "amount" and value is not None:
+            value = Decimal(str(value))
+        # 处理日期字段
+        elif key in ("sign_date", "start_date", "end_date") and value is not None:
+            if isinstance(value, str):
+                value = date.fromisoformat(value)
+        # 处理整数字段
+        elif key in ("company_id", "manager_id", "service_times") and value is not None:
+            value = int(value) if value else None
+        
+        setattr(contract, key, value)
     
     await db.commit()
     await db.refresh(contract)
@@ -213,14 +302,14 @@ async def delete_contract(
     return ResponseSchema(message="删除成功")
 
 
-@router.post("/{contract_id}/approve", response_model=ResponseSchema)
-async def approve_contract(
+@router.post("/{contract_id}/change-status", response_model=ResponseSchema)
+async def change_contract_status(
     contract_id: int,
-    data: dict = None,
-    current_user: User = Depends(require_permissions(["contract:approve"])),
+    data: dict,
+    current_user: User = Depends(require_permissions(["contract:update"])),
     db: AsyncSession = Depends(get_db)
 ):
-    """审批合同"""
+    """变更合同状态（带状态机校验）"""
     result = await db.execute(
         select(Contract).where(Contract.id == contract_id)
     )
@@ -229,7 +318,59 @@ async def approve_contract(
     if not contract:
         return ResponseSchema(code=404, message="合同不存在")
     
-    # 更新状态为已审批
+    new_status = data.get("status")
+    if not new_status:
+        return ResponseSchema(code=400, message="缺少status参数")
+    
+    # 状态机校验
+    is_valid, error_msg = validate_status_transition(contract.status, new_status)
+    if not is_valid:
+        return ResponseSchema(code=400, message=error_msg)
+    
+    old_status = contract.status
+    contract.status = new_status
+    
+    # 状态变更时的特殊处理
+    if new_status == ContractStatus.SIGNED and not contract.sign_date:
+        # 签订时自动设置签订日期
+        contract.sign_date = date.today()
+    
+    if new_status == ContractStatus.EXECUTING and not contract.start_date:
+        # 执行时自动设置开始日期
+        contract.start_date = date.today()
+    
+    if new_status == ContractStatus.COMPLETED and not contract.end_date:
+        # 完成时自动设置结束日期
+        contract.end_date = date.today()
+    
+    await db.commit()
+    await db.refresh(contract)
+    
+    return ResponseSchema(
+        data=build_contract_response(contract), 
+        message=f"状态变更成功：{old_status} -> {new_status}"
+    )
+
+
+@router.post("/{contract_id}/approve", response_model=ResponseSchema)
+async def approve_contract(
+    contract_id: int,
+    data: dict = None,
+    current_user: User = Depends(require_permissions(["contract:approve"])),
+    db: AsyncSession = Depends(get_db)
+):
+    """审批合同（pending -> approved）"""
+    result = await db.execute(
+        select(Contract).where(Contract.id == contract_id)
+    )
+    contract = result.scalar_one_or_none()
+    
+    if not contract:
+        return ResponseSchema(code=404, message="合同不存在")
+    
+    if contract.status != ContractStatus.PENDING:
+        return ResponseSchema(code=400, message="只有待审批状态的合同可以审批")
+    
     contract.status = ContractStatus.APPROVED
     await db.commit()
     await db.refresh(contract)
