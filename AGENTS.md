@@ -24,6 +24,9 @@
 - 文档管理（上传、分类、权限控制、在线预览）
 - 操作日志（中文模块名和描述）
 - 附件管理
+- 通知公告（发布、阅读确认、统计）
+- 统计分析（经营看板、财务报表、数据可视化）
+- 登录日志（记录查询、登录统计）
 
 ### 已开发完成
 所有计划模块已完成开发 ✅
@@ -90,6 +93,8 @@ safety-service-system/
 │   │   │       ├── invoices.py
 │   │   │       ├── finance.py
 │   │   │       ├── dashboard.py
+│   │   │       ├── notices.py   # 通知公告
+│   │   │       ├── services.py  # 服务管理
 │   │   │       ├── attachments.py
 │   │   │       └── logs.py      # 日志管理
 │   │   ├── core/                # 核心功能
@@ -156,6 +161,8 @@ safety-service-system/
 │   │   │   ├── ServiceManagement/
 │   │   │   ├── FinanceManagement/
 │   │   │   ├── DocumentManagement/
+│   │   │   ├── NoticeManagement/    # 通知公告
+│   │   │   ├── StatisticsAnalysis/  # 统计分析
 │   │   │   ├── SystemSettings/      # 系统设置（日志管理等）
 │   │   │   └── Profile/
 │   │   ├── stores/              # Zustand 状态管理
