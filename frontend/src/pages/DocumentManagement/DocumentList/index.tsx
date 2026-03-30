@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import {
   Card,
@@ -12,6 +13,10 @@ import {
   Image,
   Select,
   Tooltip,
+  Form,
+  Row,
+  Col,
+  Popconfirm,
 } from 'antd'
 import {
   ReloadOutlined,
@@ -23,48 +28,118 @@ import {
   FileImageOutlined,
   FileOutlined,
   FileWordOutlined,
+  FileExcelOutlined,
+  FilePptOutlined,
+  FileZipOutlined,
+  FileTextOutlined,
+  PlusOutlined,
+  FolderOutlined,
+  EditOutlined,
 } from '@ant-design/icons'
-import { attachmentApi, Attachment } from '@/api/attachments'
+import { documentApi, DocumentItem, DocumentCategory } from '@/api/documents'
 import './style.css'
 
 const { Search } = Input
 const { Option } = Select
 
+const DOCUMENT_TYPES = [
+  { value: 'contract', label: '合同文档', color: 'blue' },
+  { value: 'report', label: '报告文档', color: 'green' },
+  { value: 'certificate', label: '资质证书', color: 'purple' },
+  { value: 'training', label: '培训资料', color: 'orange' },
+  { value: 'policy', label: '政策法规', color: 'cyan' },
+  { value: 'other', label: '其他', color: 'default' },
+]
+
+const DOCUMENT_STATUS = [
+  { value: 'active', label: '正常', color: 'success' },
+  { value: 'archived', label: '已归档', color: 'warning' },
+  { value: 'disabled', label: '已禁用', color: 'default' },
+]
+
 const DocumentList = () => {
+  const navigate = useNavigate()
   const queryClient = useQueryClient()
   const [query, setQuery] = useState({
     page: 1,
     page_size: 10,
-    ref_type: undefined as string | undefined,
     keyword: '',
+    category_id: undefined as number | undefined,
+    type: undefined as string | undefined,
+    status: undefined as string | undefined,
   })
   const [previewVisible, setPreviewVisible] = useState(false)
   const [previewUrl, setPreviewUrl] = useState('')
   const [previewType, setPreviewType] = useState<'image' | 'pdf' | 'other'>('other')
   const [previewTitle, setPreviewTitle] = useState('')
+  const [editVisible, setEditVisible] = useState(false)
+  const [editingDoc, setEditingDoc] = useState<DocumentItem | null>(null)
+  const [editForm] = Form.useForm()
+  const [categoryModalVisible, setCategoryModalVisible] = useState(false)
+  const [categoryForm] = Form.useForm()
 
-  // 获取附件列表
+  // 获取文档列表
   const { data, isLoading, refetch } = useQuery({
-    queryKey: ['attachments', query],
-    queryFn: () => attachmentApi.getAttachments({
+    queryKey: ['documents', query],
+    queryFn: () => documentApi.getDocuments({
       page: query.page,
       page_size: query.page_size,
-      ref_type: query.ref_type,
+      keyword: query.keyword || undefined,
+      category_id: query.category_id,
+      type: query.type,
+      status: query.status,
     }),
   })
 
-  const attachments = data?.data?.items || []
+  // 获取分类列表
+  const { data: categoriesData } = useQuery({
+    queryKey: ['documentCategories'],
+    queryFn: () => documentApi.getCategories(),
+  })
+
+  const documents = data?.data?.items || []
   const total = data?.data?.total || 0
+  const categories = categoriesData?.data || []
 
   // 删除 mutation
   const deleteMutation = useMutation({
-    mutationFn: (id: number) => attachmentApi.deleteAttachment(id),
+    mutationFn: (id: number) => documentApi.deleteDocument(id),
     onSuccess: () => {
       message.success('删除成功')
-      queryClient.invalidateQueries({ queryKey: ['attachments'] })
+      queryClient.invalidateQueries({ queryKey: ['documents'] })
     },
     onError: () => {
       message.error('删除失败')
+    },
+  })
+
+  // 更新 mutation
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: Parameters<typeof documentApi.updateDocument>[1] }) =>
+      documentApi.updateDocument(id, data),
+    onSuccess: () => {
+      message.success('更新成功')
+      setEditVisible(false)
+      editForm.resetFields()
+      queryClient.invalidateQueries({ queryKey: ['documents'] })
+    },
+    onError: () => {
+      message.error('更新失败')
+    },
+  })
+
+  // 创建分类 mutation
+  const createCategoryMutation = useMutation({
+    mutationFn: (data: { name: string; code: string; description?: string }) =>
+      documentApi.createCategory(data),
+    onSuccess: () => {
+      message.success('分类创建成功')
+      setCategoryModalVisible(false)
+      categoryForm.resetFields()
+      queryClient.invalidateQueries({ queryKey: ['documentCategories'] })
+    },
+    onError: () => {
+      message.error('分类创建失败')
     },
   })
 
@@ -89,28 +164,41 @@ const DocumentList = () => {
     if (['doc', 'docx'].includes(ext)) {
       return <FileWordOutlined style={{ color: '#1890ff', fontSize: 24 }} />
     }
+    if (['xls', 'xlsx'].includes(ext)) {
+      return <FileExcelOutlined style={{ color: '#237804', fontSize: 24 }} />
+    }
+    if (['ppt', 'pptx'].includes(ext)) {
+      return <FilePptOutlined style={{ color: '#fa8c16', fontSize: 24 }} />
+    }
+    if (['zip', 'rar', '7z'].includes(ext)) {
+      return <FileZipOutlined style={{ color: '#722ed1', fontSize: 24 }} />
+    }
+    if (['txt', 'md'].includes(ext)) {
+      return <FileTextOutlined style={{ color: '#595959', fontSize: 24 }} />
+    }
     return <FileOutlined style={{ color: '#8c8c8c', fontSize: 24 }} />
   }
 
-  // 获取文件类型标签
-  const getFileTypeTag = (refType: string) => {
-    if (refType === 'contract') {
-      return <Tag color="blue">合同附件</Tag>
-    }
-    if (refType === 'invoice') {
-      return <Tag color="green">发票附件</Tag>
-    }
-    return <Tag>其他</Tag>
+  // 获取文档类型标签
+  const getTypeTag = (type: string) => {
+    const item = DOCUMENT_TYPES.find(t => t.value === type)
+    return <Tag color={item?.color || 'default'}>{item?.label || type}</Tag>
+  }
+
+  // 获取状态标签
+  const getStatusTag = (status: string) => {
+    const item = DOCUMENT_STATUS.find(s => s.value === status)
+    return <Tag color={item?.color || 'default'}>{item?.label || status}</Tag>
   }
 
   // 预览
-  const handlePreview = async (record: Attachment) => {
+  const handlePreview = async (record: DocumentItem) => {
     try {
-      const res = await attachmentApi.getPreviewUrl(record.id)
+      const res = await documentApi.getPreviewUrl(record.id)
       if (res.data?.preview_url) {
         const fileExt = record.file_ext.toLowerCase()
-        setPreviewTitle(record.file_name)
-        
+        setPreviewTitle(record.title)
+
         if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExt)) {
           setPreviewType('image')
           setPreviewUrl(res.data.preview_url)
@@ -130,9 +218,9 @@ const DocumentList = () => {
   }
 
   // 下载
-  const handleDownload = async (record: Attachment) => {
+  const handleDownload = async (record: DocumentItem) => {
     try {
-      const res = await attachmentApi.getDownloadUrl(record.id)
+      const res = await documentApi.getDownloadUrl(record.id)
       if (res.data?.download_url) {
         const link = document.createElement('a')
         link.href = res.data.download_url
@@ -146,53 +234,81 @@ const DocumentList = () => {
     }
   }
 
-  // 搜索过滤
-  const filteredAttachments = attachments.filter(item => {
-    if (query.keyword) {
-      return item.file_name.toLowerCase().includes(query.keyword.toLowerCase())
+  // 编辑
+  const handleEdit = (record: DocumentItem) => {
+    setEditingDoc(record)
+    editForm.setFieldsValue({
+      title: record.title,
+      description: record.description,
+      category_id: record.category_id,
+      type: record.type,
+      version: record.version,
+      status: record.status,
+      is_public: record.is_public,
+      allow_download: record.allow_download,
+    })
+    setEditVisible(true)
+  }
+
+  // 提交编辑
+  const handleEditSubmit = async () => {
+    const values = await editForm.validateFields()
+    if (editingDoc) {
+      updateMutation.mutate({ id: editingDoc.id, data: values })
     }
-    return true
-  })
+  }
 
   const columns = [
     {
-      title: '文件',
-      dataIndex: 'file_name',
-      key: 'file_name',
-      render: (text: string, record: Attachment) => (
+      title: '文档',
+      dataIndex: 'title',
+      key: 'title',
+      render: (text: string, record: DocumentItem) => (
         <Space>
           {getFileIcon(record.file_ext)}
           <div>
             <div className="file-name">{text}</div>
-            <div className="file-size">{formatFileSize(record.file_size)}</div>
+            <div className="file-size">{formatFileSize(record.file_size)} · {record.file_name}</div>
           </div>
         </Space>
       ),
     },
     {
       title: '类型',
-      dataIndex: 'ref_type',
-      key: 'ref_type',
+      dataIndex: 'type',
+      key: 'type',
       width: 120,
-      render: (refType: string) => getFileTypeTag(refType),
+      render: (type: string) => getTypeTag(type),
     },
     {
-      title: '关联信息',
-      key: 'ref_info',
-      width: 150,
-      render: (_: any, record: Attachment) => (
-        <span className="ref-info">
-          {record.ref_type === 'contract' ? '合同' : '发票'} #{record.ref_id}
-        </span>
-      ),
+      title: '分类',
+      dataIndex: 'category',
+      key: 'category',
+      width: 120,
+      render: (category: DocumentItem['category']) => category?.name || '-',
+    },
+    {
+      title: '状态',
+      dataIndex: 'status',
+      key: 'status',
+      width: 100,
+      render: (status: string) => getStatusTag(status),
     },
     {
       title: '上传人',
       dataIndex: 'uploader',
       key: 'uploader',
       width: 120,
-      render: (uploader: Attachment['uploader']) =>
+      render: (uploader: DocumentItem['uploader']) =>
         uploader?.real_name || uploader?.username || '-',
+    },
+    {
+      title: '浏览/下载',
+      key: 'counts',
+      width: 120,
+      render: (_: any, record: DocumentItem) => (
+        <span>{record.view_count} / {record.download_count}</span>
+      ),
     },
     {
       title: '上传时间',
@@ -204,8 +320,8 @@ const DocumentList = () => {
     {
       title: '操作',
       key: 'action',
-      width: 150,
-      render: (_: any, record: Attachment) => (
+      width: 180,
+      render: (_: any, record: DocumentItem) => (
         <Space size="small">
           <Tooltip title="预览">
             <Button
@@ -221,19 +337,23 @@ const DocumentList = () => {
               onClick={() => handleDownload(record)}
             />
           </Tooltip>
-          <Tooltip title="删除">
+          <Tooltip title="编辑">
             <Button
               type="text"
-              danger
-              icon={<DeleteOutlined />}
-              onClick={() => {
-                Modal.confirm({
-                  title: '确认删除',
-                  content: `确定要删除 "${record.file_name}" 吗？`,
-                  onOk: () => deleteMutation.mutate(record.id),
-                })
-              }}
+              icon={<EditOutlined />}
+              onClick={() => handleEdit(record)}
             />
+          </Tooltip>
+          <Tooltip title="删除">
+            <Popconfirm
+              title="确认删除"
+              description={`确定要删除 "${record.title}" 吗？`}
+              onConfirm={() => deleteMutation.mutate(record.id)}
+              okText="确定"
+              cancelText="取消"
+            >
+              <Button type="text" danger icon={<DeleteOutlined />} />
+            </Popconfirm>
           </Tooltip>
         </Space>
       ),
@@ -246,6 +366,12 @@ const DocumentList = () => {
         title="文档管理"
         extra={
           <Space>
+            <Button icon={<FolderOutlined />} onClick={() => setCategoryModalVisible(true)}>
+              分类管理
+            </Button>
+            <Button type="primary" icon={<PlusOutlined />} onClick={() => navigate('/documents/upload')}>
+              上传文档
+            </Button>
             <Button icon={<ReloadOutlined />} onClick={() => refetch()}>
               刷新
             </Button>
@@ -254,33 +380,64 @@ const DocumentList = () => {
       >
         {/* 搜索栏 */}
         <div className="search-bar">
-          <Space>
-            <Select
-              placeholder="全部类型"
-              allowClear
-              style={{ width: 150 }}
-              value={query.ref_type}
-              onChange={(value) => setQuery({ ...query, ref_type: value, page: 1 })}
-            >
-              <Option value="contract">合同附件</Option>
-              <Option value="invoice">发票附件</Option>
-            </Select>
-            <Search
-              placeholder="搜索文件名"
-              allowClear
-              value={query.keyword}
-              onChange={(e) => setQuery({ ...query, keyword: e.target.value })}
-              onSearch={() => setQuery({ ...query, page: 1 })}
-              style={{ width: 300 }}
-              prefix={<SearchOutlined />}
-            />
-          </Space>
+          <Row gutter={16}>
+            <Col>
+              <Select
+                placeholder="全部分类"
+                allowClear
+                style={{ width: 150 }}
+                value={query.category_id}
+                onChange={(value) => setQuery({ ...query, category_id: value, page: 1 })}
+              >
+                {categories.map(cat => (
+                  <Option key={cat.id} value={cat.id}>{cat.name}</Option>
+                ))}
+              </Select>
+            </Col>
+            <Col>
+              <Select
+                placeholder="全部类型"
+                allowClear
+                style={{ width: 150 }}
+                value={query.type}
+                onChange={(value) => setQuery({ ...query, type: value, page: 1 })}
+              >
+                {DOCUMENT_TYPES.map(t => (
+                  <Option key={t.value} value={t.value}>{t.label}</Option>
+                ))}
+              </Select>
+            </Col>
+            <Col>
+              <Select
+                placeholder="全部状态"
+                allowClear
+                style={{ width: 150 }}
+                value={query.status}
+                onChange={(value) => setQuery({ ...query, status: value, page: 1 })}
+              >
+                {DOCUMENT_STATUS.map(s => (
+                  <Option key={s.value} value={s.value}>{s.label}</Option>
+                ))}
+              </Select>
+            </Col>
+            <Col>
+              <Search
+                placeholder="搜索文档标题或文件名"
+                allowClear
+                value={query.keyword}
+                onChange={(e) => setQuery({ ...query, keyword: e.target.value })}
+                onSearch={() => setQuery({ ...query, page: 1 })}
+                style={{ width: 300 }}
+                prefix={<SearchOutlined />}
+              />
+            </Col>
+          </Row>
         </div>
 
         {/* 表格 */}
         <Table
           columns={columns}
-          dataSource={filteredAttachments}
+          dataSource={documents}
           rowKey="id"
           loading={isLoading}
           pagination={{
@@ -329,6 +486,150 @@ const DocumentList = () => {
           src={previewUrl}
           style={{ width: '100%', height: 600, border: 'none' }}
         />
+      </Modal>
+
+      {/* 编辑弹窗 */}
+      <Modal
+        open={editVisible}
+        title="编辑文档"
+        onOk={handleEditSubmit}
+        onCancel={() => {
+          setEditVisible(false)
+          editForm.resetFields()
+        }}
+        confirmLoading={updateMutation.isPending}
+      >
+        <Form form={editForm} layout="vertical">
+          <Form.Item
+            name="title"
+            label="文档标题"
+            rules={[{ required: true, message: '请输入文档标题' }]}
+          >
+            <Input placeholder="请输入文档标题" />
+          </Form.Item>
+          <Form.Item name="description" label="文档描述">
+            <Input.TextArea rows={3} placeholder="请输入文档描述" />
+          </Form.Item>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item name="category_id" label="分类">
+                <Select placeholder="选择分类" allowClear>
+                  {categories.map(cat => (
+                    <Option key={cat.id} value={cat.id}>{cat.name}</Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item name="type" label="文档类型">
+                <Select placeholder="选择类型">
+                  {DOCUMENT_TYPES.map(t => (
+                    <Option key={t.value} value={t.value}>{t.label}</Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item name="version" label="版本号">
+                <Input placeholder="如 1.0" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item name="status" label="状态">
+                <Select placeholder="选择状态">
+                  {DOCUMENT_STATUS.map(s => (
+                    <Option key={s.value} value={s.value}>{s.label}</Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item name="is_public" label="是否公开" valuePropName="checked">
+                <Select>
+                  <Option value={true}>公开</Option>
+                  <Option value={false}>不公开</Option>
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item name="allow_download" label="允许下载" valuePropName="checked">
+                <Select>
+                  <Option value={true}>允许</Option>
+                  <Option value={false}>不允许</Option>
+                </Select>
+              </Form.Item>
+            </Col>
+          </Row>
+        </Form>
+      </Modal>
+
+      {/* 分类管理弹窗 */}
+      <Modal
+        open={categoryModalVisible}
+        title="分类管理"
+        footer={null}
+        onCancel={() => setCategoryModalVisible(false)}
+        width={600}
+      >
+        <Table
+          size="small"
+          pagination={false}
+          dataSource={categories}
+          rowKey="id"
+          columns={[
+            { title: '分类名称', dataIndex: 'name', key: 'name' },
+            { title: '编码', dataIndex: 'code', key: 'code' },
+            {
+              title: '操作',
+              key: 'action',
+              width: 100,
+              render: (_: any, record: DocumentCategory) => (
+                <Popconfirm
+                  title="确认删除"
+                  description={`确定删除分类 "${record.name}" 吗？`}
+                  onConfirm={() => {
+                    documentApi.deleteCategory(record.id).then(() => {
+                      message.success('删除成功')
+                      queryClient.invalidateQueries({ queryKey: ['documentCategories'] })
+                    }).catch(() => {
+                      message.error('删除失败，请检查是否有关联文档或子分类')
+                    })
+                  }}
+                >
+                  <Button type="link" danger size="small">删除</Button>
+                </Popconfirm>
+              ),
+            },
+          ]}
+        />
+        <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid #f0f0f0' }}>
+          <Form form={categoryForm} layout="inline" onFinish={(values) => createCategoryMutation.mutate(values)}>
+            <Form.Item
+              name="name"
+              rules={[{ required: true, message: '请输入分类名称' }]}
+            >
+              <Input placeholder="分类名称" />
+            </Form.Item>
+            <Form.Item
+              name="code"
+              rules={[{ required: true, message: '请输入分类编码' }]}
+            >
+              <Input placeholder="分类编码" />
+            </Form.Item>
+            <Form.Item name="description">
+              <Input placeholder="描述（可选）" />
+            </Form.Item>
+            <Form.Item>
+              <Button type="primary" htmlType="submit" loading={createCategoryMutation.isPending}>
+                添加分类
+              </Button>
+            </Form.Item>
+          </Form>
+        </div>
       </Modal>
     </div>
   )

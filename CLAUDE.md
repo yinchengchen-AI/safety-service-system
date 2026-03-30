@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 安全生产第三方服务业务管理系统 (Safety Service Management System) - A full-stack business management system for safety production service companies, built with FastAPI backend and React frontend.
 
-**Current Status**: 10+ modules completed including user management, customer management, contract management, service management, finance management, and operation logs.
+**Current Status**: 11+ modules completed including user management, customer management, contract management, service management, finance management, document management, and operation logs.
 
 ## Architecture
 
@@ -181,11 +181,11 @@ docker-compose up -d --build
 - Invoice management
 - Payment management
 - Service management (block-style form)
+- Document management (upload, categories, permissions, preview)
 - Operation logs (Chinese module names & descriptions)
 - Attachment management
 
 **In Progress**: 
-- Document management
 - Notifications
 - Statistics
 - Login logs

@@ -15,6 +15,7 @@ import InvoiceList from '@/pages/FinanceManagement/InvoiceList'
 import PaymentList from '@/pages/FinanceManagement/PaymentList'
 import ServiceList from '@/pages/ServiceManagement/ServiceList'
 import DocumentList from '@/pages/DocumentManagement/DocumentList'
+import DocumentUpload from '@/pages/DocumentManagement/DocumentUpload'
 import LogManagement from '@/pages/SystemSettings/LogManagement'
 import Profile from '@/pages/Profile'
 
@@ -111,6 +112,7 @@ function App() {
             
             {/* 文档管理 */}
             <Route path="documents" element={<DocumentList />} />
+            <Route path="documents/upload" element={<DocumentUpload />} />
             
             {/* 系统设置 */}
             <Route path="logs" element={<LogManagement />} />

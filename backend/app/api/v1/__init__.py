@@ -4,8 +4,8 @@ API路由V1版本
 from fastapi import APIRouter
 
 from app.api.v1 import (
-    auth, users, roles, departments, permissions, 
-    companies, contracts, invoices, dashboard, attachments, finance, logs
+    auth, users, roles, departments, permissions,
+    companies, contracts, invoices, dashboard, attachments, finance, logs, documents
 )
 
 api_router = APIRouter(prefix="/v1")
@@ -33,6 +33,9 @@ api_router.include_router(dashboard.router, prefix="/statistics", tags=["统计�
 
 # 附件管理
 api_router.include_router(attachments.router, prefix="/attachments", tags=["附件管理"])
+
+# 文档管理
+api_router.include_router(documents.router, prefix="/documents", tags=["文档管理"])
 
 # 财务管理（开票、收款）
 api_router.include_router(finance.router, prefix="/finance", tags=["财务管理"])
